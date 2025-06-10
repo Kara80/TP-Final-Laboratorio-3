@@ -60,5 +60,39 @@ public class Reserva {
         this.fechaFin = fechaFin;
     }
 
+    /*
+    Verifica si en el rango de fechas pasadas por parametro se superpone con esta reserva.
+    Retorna true si las fechas de la reserva actual se interponen con el periodo de tiempo pasado por parametro.
+    Retorna false si no.
+
+    Este metodo se usara en la clase Habitacion (que tiene una lista de reservas).
+    Este metodo se va a implementar recorriendo la lista de reservas para verificar si
+    las fechas de la nueva reserva se superponen con las fechas de alguna reserva.
+     */
+    public boolean chocaConFechas(LocalDate fechaInicio, LocalDate fechaFin){
+
+        //si esta reserva no esta reservada o ya tomada no se interpone con las fechas
+        if (this.estadoDeReserva != EstadoDeReserva.reservada){
+            return false;
+        }
+
+        //si el final de las fechas pasadas por parametro es antes del dia que
+        //empieza la reserva actual (osea no se superponen) retorna false
+        if (fechaFin.isBefore(this.fechaInicio)){
+            return false;
+        }
+
+        //si el 1er dia de las fechas pasadas por parametro es despues del ultimo
+        //dia de la reserva actual (no se superponen) retorna false
+        if (fechaInicio.isAfter(this.fechaFin)){
+            return false;
+        }
+
+        //si no entro a ningun if es porque las fechas de la reserva actual
+        //y las fechas del parametro se superponen
+        return true;
+    }
+
+
 
 }

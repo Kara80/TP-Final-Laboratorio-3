@@ -4,5 +4,5 @@ public enum EstadoDeHabitacion {
 
     disponible,
     ocupada,
-    en_limpieza;    
+    en_mantenimiento;
 }
