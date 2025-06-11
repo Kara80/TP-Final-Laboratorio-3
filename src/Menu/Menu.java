@@ -2,10 +2,7 @@ package Menu;
 
 import Excepciones.FechaReservaInvalidaException;
 import Excepciones.HabitacionNoDisponibleException;
-import Modelo.Cliente;
-import Modelo.Habitacion;
-import Modelo.Hotel;
-import Modelo.Reserva;
+import Modelo.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +15,7 @@ public class Menu {
             //Ejemplos para comprobar la funcionalidad de lso metodos
 
 
-                  /*
+/*
         Habitacion habitacion = new Habitacion(101, 2); // Supongamos que su constructor recibe un número
         Cliente cliente = new Cliente("12345678Juan Pérez", "Juan Pérez","argentina", "mdp");
 
@@ -56,9 +53,9 @@ public class Menu {
         } catch (Exception e) {
             System.out.println("Error al agregar reserva 3: " + e.getMessage());
         }
+*/
 
-            */
-
+/*
         Hotel hotel = new Hotel();
 
         hotel.getHabitaciones().agregar(new Habitacion(12, 2));
@@ -85,6 +82,27 @@ public class Menu {
         } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
             System.out.println("Error al hacer la reserva: " + e.getMessage());
         }
+*/
+
+        Hotel hotel = new Hotel();
+
+        // Crear un recepcionista con referencia al hotel
+        Recepcionista recepcionista = new Recepcionista("123", "Juan", "Argentina", "Calle Falsa 123", hotel);
+
+
+        // Crear un cliente sin reservas
+        Cliente cliente = new Cliente("456", "Pedro", "Argentina", "Av. Siempreviva 742");
+
+        try {
+            // Intentar hacer check-in
+            recepcionista.hacerCheckIn(cliente);
+        } catch (RuntimeException e) {
+            // Captura el error lanzado y lo muestra
+            System.out.println("⚠️ Error: " + e.getMessage());
+        }
+
+
+
 
     }
 

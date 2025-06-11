@@ -83,13 +83,13 @@ public class Habitacion {
 
         //si la habitacion no este disponible (ocupada o en_mantenimiento) no se puede reservar
         if (this.estadoHabitacion != EstadoDeHabitacion.disponible){
-            throw new HabitacionNoDisponibleException("La habitacion no se encuentra disponible.");
+            throw new HabitacionNoDisponibleException("La habitacion no se encuentra disponible." , nuevaReserva.getHabitacion().getNumero());
         }
 
         //si la habitacion esta reservada entre esas fechas se arroja la excepcion y se avisa
         if (!estaDisponible(nuevaReserva.getFechaInicio(), nuevaReserva.getFechaFin())){
             throw new HabitacionNoDisponibleException("La habitacion se encuentra reservada entre las fechas " +
-                        nuevaReserva.getFechaInicio() + " y " + nuevaReserva.getFechaFin() + " .");
+                        nuevaReserva.getFechaInicio() + " y " + nuevaReserva.getFechaFin() + " ." , nuevaReserva.getHabitacion().getNumero());
         }
 
         //si no se entro a ningun if se puede agregar una nueva reserva a la Habitacion
