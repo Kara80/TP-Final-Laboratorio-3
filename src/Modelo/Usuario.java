@@ -1,5 +1,7 @@
 package Modelo;
 
+import java.util.Objects;
+
 public abstract class Usuario {
     private String dni;
     private String nombre;
@@ -43,6 +45,18 @@ public abstract class Usuario {
 
     public void setDomicilio(String domicilio) {
         this.domicilio = domicilio;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(dni, usuario.dni) && Objects.equals(nacionalidad, usuario.nacionalidad);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dni, nacionalidad);
     }
 
     @Override
