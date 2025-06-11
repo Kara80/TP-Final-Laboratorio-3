@@ -3,6 +3,8 @@ package Modelo;
 import Contenedores.Gestor;
 import Excepciones.FechaReservaInvalidaException;
 import Excepciones.HabitacionNoDisponibleException;
+import Enum.EstadoDeHabitacion;
+import Excepciones.ReservaNoEncontradaException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -63,6 +65,75 @@ public class Hotel {
         reservas.agregar(reserva);
 
     }
+
+    /*
+    Recorre la lista de reservas y verifica si existe una reserva cuyo cliente coincida
+    con el pasado por parametro y que la fecha de inicio coincida tambien.
+    Tambien se verifica si la habitacion esta disponible
+    La va a llamar Recepcionista
+     */
+    public void checkIn(Cliente cliente) throws HabitacionNoDisponibleException , ReservaNoEncontradaException {
+
+        //un atributo con el dia de hoy
+        LocalDate fechaHoy = LocalDate.now();
+
+        for (Reserva r : reservas.obtenerTodos()){
+
+            //si el cliente en el que estoy parado en la lista de reservas es igual al cliente pasado y
+            //la fecha del 1er dia de la reserva coincide con la fecha de hoy
+            if (r.getCliente().equals(cliente) && r.getFechaInicio().isEqual(fechaHoy)){
+
+                Habitacion habitacion = r.getHabitacion();
+
+                //si la habitacion esta disponible
+                if (habitacion.getEstadoHabitacion() == EstadoDeHabitacion.disponible){
+
+                    //el estado de la habitacion pasa a ocupada
+                    habitacion.setEstadoHabitacion(EstadoDeHabitacion.ocupada);
+                    return;
+                }
+                //si la habitacion no esta disponible (ocupada o en mantenimiento)
+                else{
+                    throw new HabitacionNoDisponibleException("La habitacion no esta disponible" , habitacion.getNumero());
+                }
+            }
+        }
+        //si ya recorri toda la lista y no encontro ni una reserva del cliente
+        throw new ReservaNoEncontradaException("No se encontro una reserva de hoy para el cliente" , cliente, fechaHoy);
+    }
+
+    /*
+    Recorre la lista de reservas y verifica si existe una reserva cuyo cliente coincidad
+    con el pasado por parametro y que la fecha del ultimo dia sea hoy.
+    Cambia el estado de ocupada a disponible
+    La llama recepcionista
+     */
+    public void checkOut(Cliente cliente) throws HabitacionNoDisponibleException , ReservaNoEncontradaException{
+
+        LocalDate fechaHoy = LocalDate.now();
+
+        for (Reserva r : reservas.obtenerTodos()){
+
+            if (r.getCliente().equals(cliente) && r.getFechaFin().isEqual(fechaHoy)){
+
+                Habitacion habitacion = r.getHabitacion();
+
+                if (habitacion.getEstadoHabitacion()== EstadoDeHabitacion.ocupada){
+                    habitacion.setEstadoHabitacion(EstadoDeHabitacion.disponible);
+                    return;
+                }
+                else{
+                    throw new HabitacionNoDisponibleException("La habitacion no esta ocupada", habitacion.getNumero());
+                }
+
+            }
+        }
+
+        //si ya recorrio toda la lista y no encontro ni una reserva del cliente
+        throw new ReservaNoEncontradaException("No se encontro una reserva que termine hoy del cliente", cliente, fechaHoy);
+
+    }
+
 
 
     @Override
