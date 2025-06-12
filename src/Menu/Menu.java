@@ -101,7 +101,36 @@ public class Menu {
             System.out.println("⚠️ Error: " + e.getMessage());
         }
 
+        //Creando la reserva
+        LocalDate inicio = LocalDate.now();
+        LocalDate fin = LocalDate.of(2025, 7, 15);
+        Habitacion h = new Habitacion(11, 3);
+        Reserva reserva = new Reserva(h, cliente1, inicio, fin);
 
+        try {
+            hotel.agregarReserva(reserva);
+        } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+            System.out.println("Error al hacer la reserva: " + e.getMessage());
+        }
+        /// Acá si tendría que funcionar el checkin
+        try {
+            // Intentar hacer check-in
+            recepcionista.hacerCheckIn(cliente1);
+            System.out.println("Check-in realizado con exito");
+        } catch (RuntimeException e) {
+            // Captura el error lanzado y lo muestra
+            System.out.println("⚠️ Error: " + e.getMessage());
+        }
+
+        /// Acá veremos un Error lanzado, puesto que no se encuentra una reserva que termine hoy.
+        try {
+            // Intentar hacer check-out
+            recepcionista.hacerCheckOut(cliente1);
+            System.out.println("Check-out realizado con exito");
+        } catch (RuntimeException e) {
+            // Captura el error lanzado y lo muestra
+            System.out.println("⚠️ Error: " + e.getMessage());
+        }
 
 
     }
