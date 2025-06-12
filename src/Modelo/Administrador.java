@@ -30,7 +30,12 @@ public class Administrador extends Usuario{
         return jsonAdmin;
     }
 
-    //------------------------//
+    //--------------- JSON A Administrador ----------------//
+    public static Administrador jsonAAdministrador(JSONObject json){
+        Administrador admin = new Administrador();
+        admin.cargarDesdeJson(json);
+        return admin;
+    }
 
 
 }
