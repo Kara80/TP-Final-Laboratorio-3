@@ -148,6 +148,26 @@ public class Habitacion {
     }
 
     //----------------------------------------------//
+    public static Habitacion jsonAHabitacion(JSONObject json){
+        Habitacion habitacion = new Habitacion(0, 0);  // valores provisorios, los seteamos enseguida
+
+        try {
+            habitacion.setNumero(json.getInt("numero"));
+            habitacion.setCapacidad(json.getInt("capacidad"));
+
+            // EstadoDeHabitacion desde String → Enum
+            EstadoDeHabitacion estado = EstadoDeHabitacion.valueOf(json.getString("estadoHbitacion"));
+            habitacion.setEstadoHabitacion(estado);
+
+            // No cargamos reservas para evitar bucle — como hacés vos con reservaAJson()
+            habitacion.getReservas().clear();
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return habitacion;
+    }
 
 
     @Override
