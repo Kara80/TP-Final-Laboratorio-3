@@ -147,7 +147,7 @@ public class Habitacion {
         return jsonHabitacion;
     }
 
-    //----------------------------------------------//
+    // ------------------------- JSON A Habitacion -------------------------//
     public static Habitacion jsonAHabitacion(JSONObject json){
         Habitacion habitacion = new Habitacion(0, 0);  // valores provisorios, los seteamos enseguida
 

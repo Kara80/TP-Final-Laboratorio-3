@@ -22,6 +22,7 @@ public abstract class Usuario {
         this.contraseña = contraseña;
         this.mail = mail;
     }
+    public Usuario(){}
 
     public String getDni() {
         return dni;
