@@ -88,7 +88,7 @@ public class Cliente extends Usuario{
         return jsonCliente;
     }
 
-    //----------------------------------------------------//
+    //--------------- JSON A Cliente ----------------//
 
     public static Cliente jsonACliente(JSONObject json){
         Cliente cliente = new Cliente();
