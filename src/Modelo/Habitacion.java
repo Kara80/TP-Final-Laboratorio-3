@@ -159,7 +159,7 @@ public class Habitacion {
             EstadoDeHabitacion estado = EstadoDeHabitacion.valueOf(json.getString("estadoHbitacion"));
             habitacion.setEstadoHabitacion(estado);
 
-            // No cargamos reservas para evitar bucle — como hacés vos con reservaAJson()
+            // No cargamos reservas para evitar bucle
             habitacion.getReservas().clear();
 
         } catch (JSONException e){
