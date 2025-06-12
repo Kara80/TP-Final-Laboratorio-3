@@ -93,7 +93,7 @@ public class Cliente extends Usuario{
     public static Cliente jsonACliente(JSONObject json){
         Cliente cliente = new Cliente();
         cliente.cargarDesdeJson(json);  // ← carga comunes
-            
+
         try {
             if (json.has("reservas")) {
                 JSONArray jsonReservas = json.getJSONArray("reservas");
