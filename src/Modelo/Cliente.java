@@ -16,6 +16,10 @@ public class Cliente extends Usuario{
         this.reservas = new ArrayList<>();
     }
 
+    public Cliente() {
+
+    }
+
     public List<Reserva> getReservas() {
         return reservas;
     }
