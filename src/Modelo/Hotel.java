@@ -337,7 +337,7 @@ public class Hotel {
     public void grabarHabitaciones(){
 
         try{
-            JsonUtiles.grabarUnJson(new JSONArray().put(habitacionesAJson()),"Habitaciones.json");
+            JsonUtiles.grabarUnJson(habitacionesAJson(),"Habitaciones.json");
         }
         catch(Exception e){
             System.out.println("No se ha podido grabar el archivo");

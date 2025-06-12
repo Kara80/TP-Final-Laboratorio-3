@@ -183,7 +183,7 @@ public class Habitacion {
     }
 
     @Override
-    public String mostrarInformacion() {
+    public String toString() {
         return "Habitación Nº " + getNumero() + " - Capacidad: " + getCapacidad()+ "Estado Actual: "+getEstadoHabitacion();
     }
 }
