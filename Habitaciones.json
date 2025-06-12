@@ -1,0 +1,14 @@
+[
+    {
+        "numero": 101,
+        "reservas": [],
+        "estadoHbitacion": "disponible",
+        "capacidad": 3
+    },
+    {
+        "numero": 102,
+        "reservas": [],
+        "estadoHbitacion": "disponible",
+        "capacidad": 5
+    }
+]

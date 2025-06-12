@@ -18,6 +18,13 @@ public class Gestor <T> {
         elementos.remove(elemento);
     }
 
+    public void mostrar(){
+        for (T elemento : elementos){
+            System.out.println(elemento + " ");
+        }
+        System.out.println();
+    }
+
     public List<T> obtenerTodos(){
         return new ArrayList<>(elementos);
     }

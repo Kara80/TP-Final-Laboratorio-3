@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -206,7 +207,7 @@ public class Hotel {
         try{
             JSONArray jsonHabitaciones = new JSONArray(JsonUtiles.leerUnJson("Habitaciones.json"));
             for (int i = 0; i < jsonHabitaciones.length(); i++){
-                Habitacion h = Habitacion.jsonAHabitacion(jsonHabitaciones.getJSONObject(0));
+                Habitacion h = Habitacion.jsonAHabitacion(jsonHabitaciones.getJSONObject(i));
                 habitaciones.agregar(h);
             }
 
@@ -221,12 +222,65 @@ public class Hotel {
         try{
             JSONArray jsonReservas = new JSONArray(JsonUtiles.leerUnJson("Reservas.json"));
             for (int i = 0; i < jsonReservas.length(); i++){
-                Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(0));
+                Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(i));
                 reservas.agregar(r);
             }
         }
         catch(JSONException e){
             System.out.println("No se ha podido leer el archivo");
+        }
+    }
+
+    public void leerClientes(){
+
+        try{
+            JSONArray jsonClientes = new JSONArray(JsonUtiles.leerUnJson("Clientes.json"));
+            for (int i = 0; i < jsonClientes.length(); i++){
+                Cliente c = Cliente.jsonACliente(jsonClientes.getJSONObject(i));
+                clientes.agregar(c);
+            }
+        }
+        catch(JSONException e){
+            System.out.println("No se ha podido leer el archivo");
+        }
+    }
+
+    public void leerAdministradores(){
+
+        try{
+            JSONArray jsonAdministradores = new JSONArray(JsonUtiles.leerUnJson("Administradores.json"));
+            for (int i = 0; i < jsonAdministradores.length(); i++){
+                Administrador a = Administrador.jsonAAdministrador(jsonAdministradores.getJSONObject(i));
+                administradores.agregar(a);
+            }
+        }
+        catch(JSONException e){
+            System.out.println("No se ha podido leer el archivo");
+        }
+    }
+
+    public void leerRecepcionistas(){
+
+        try{
+            JSONArray jsonRecepcionistas = new JSONArray(JsonUtiles.leerUnJson("Recepcionistas.json"));
+            for (int i = 0; i < jsonRecepcionistas.length(); i++){
+                Recepcionista r = Recepcionista.jsonARecepcionista(jsonRecepcionistas.getJSONObject(i));
+                recepcionistas.agregar(r);
+            }
+        }
+        catch(JSONException e){
+            System.out.println("No se ha podido leer el archivo");
+        }
+    }
+
+    //-------------------------Grabar JSON-----------------------------//
+    public void grabarHabitaciones(){
+
+        try{
+            JsonUtiles.grabarUnJson(new JSONArray().put(habitacionesAJson()),"Habitaciones.json");
+        }
+        catch(Exception e){
+            System.out.println("No se ha podido grabar el archivo");
         }
     }
 
