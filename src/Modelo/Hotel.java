@@ -5,6 +5,7 @@ import Excepciones.FechaReservaInvalidaException;
 import Excepciones.HabitacionNoDisponibleException;
 import Enum.EstadoDeHabitacion;
 import Excepciones.ReservaNoEncontradaException;
+import JSONUtiles.JsonUtiles;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -198,6 +199,36 @@ public class Hotel {
     }
 
     //------------------------------------------------------------------//
+
+    //-------------------------Lectura JSON-----------------------------//
+    public void leerHabitaciones(){
+
+        try{
+            JSONArray jsonHabitaciones = new JSONArray(JsonUtiles.leerUnJson("Habitaciones.json"));
+            for (int i = 0; i < jsonHabitaciones.length(); i++){
+                Habitacion h = Habitacion.jsonAHabitacion(jsonHabitaciones.getJSONObject(0));
+                habitaciones.agregar(h);
+            }
+
+        }
+        catch (JSONException e){
+            System.out.println("No se ha podido leer el archivo");
+        }
+    }
+
+    public void leerReservas(){
+
+        try{
+            JSONArray jsonReservas = new JSONArray(JsonUtiles.leerUnJson("Reservas.json"));
+            for (int i = 0; i < jsonReservas.length(); i++){
+                Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(0));
+                reservas.agregar(r);
+            }
+        }
+        catch(JSONException e){
+            System.out.println("No se ha podido leer el archivo");
+        }
+    }
 
     @Override
     public String toString() {
