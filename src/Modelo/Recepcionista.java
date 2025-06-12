@@ -15,6 +15,10 @@ public class Recepcionista extends Usuario{
         this.hotel = hotel;
     }
 
+    public Recepcionista() {
+
+    }
+
     public Hotel getHotel() {
         return hotel;
     }
