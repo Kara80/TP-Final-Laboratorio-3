@@ -181,4 +181,9 @@ public class Habitacion {
     public int hashCode() {
         return Objects.hashCode(numero);
     }
+
+    @Override
+    public String mostrarInformacion() {
+        return "Habitación Nº " + getNumero() + " - Capacidad: " + getCapacidad()+ "Estado Actual: "+getEstadoHabitacion();
+    }
 }
