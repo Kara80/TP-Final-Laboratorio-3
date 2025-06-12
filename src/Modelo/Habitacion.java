@@ -7,6 +7,9 @@ import java.util.Objects;
 import Enum.EstadoDeHabitacion;
 import Excepciones.FechaReservaInvalidaException;
 import Excepciones.HabitacionNoDisponibleException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Habitacion {
 
@@ -96,6 +99,55 @@ public class Habitacion {
         reservas.add(nuevaReserva);
 
     }
+
+    //----------------------- JAVA A JSON -----------------------//
+    //sin lista de reservas para evitar bucle en Reserva
+    public JSONObject habitacionAJson(){
+        JSONObject jsonHabitacion = new JSONObject();
+
+        try{
+
+            jsonHabitacion.put("numero", getNumero());
+            jsonHabitacion.put("capacidad", getCapacidad());
+            jsonHabitacion.put("estadoHbitacion", getEstadoHabitacion());
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
+        return jsonHabitacion;
+    }
+
+    /*
+    este es el metodo a invocar en Hotel
+     */
+    public JSONObject habitacionAJsonConReservas(){
+        JSONObject jsonHabitacion = new JSONObject();
+
+        try{
+
+            jsonHabitacion.put("numero", getNumero());
+            jsonHabitacion.put("capacidad", getCapacidad());
+            jsonHabitacion.put("estadoHbitacion", getEstadoHabitacion());
+
+            JSONArray jsonReservas = new JSONArray();
+            for (Reserva r : reservas){
+                JSONObject jsonReserva = r.reservaAJsonSinHabitacion();
+                jsonReservas.put(jsonReserva);
+            }
+            jsonHabitacion.put("reservas", getReservas());
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
+        return jsonHabitacion;
+    }
+
+    //----------------------------------------------//
 
 
     @Override

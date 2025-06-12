@@ -2,14 +2,24 @@ package Modelo;
 
 import Excepciones.HabitacionNoDisponibleException;
 import Excepciones.ReservaNoEncontradaException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Recepcionista extends Usuario{
 
     //maneja una referncia a Hotel para que pueda operar sobre reservas, checksIn/Out
     private Hotel hotel;
 
-    public Recepcionista(String dni, String nombre, String nacionalidad, String domicilio, Hotel hotel) {
-        super(dni, nombre, nacionalidad, domicilio);
+    public Recepcionista(String dni, String nombre, String nacionalidad, String domicilio, Hotel hotel, String contrasenia, String mail) {
+        super(dni, nombre, nacionalidad, domicilio, contrasenia, mail);
+        this.hotel = hotel;
+    }
+
+    public Hotel getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(Hotel hotel) {
         this.hotel = hotel;
     }
 
@@ -35,5 +45,31 @@ public class Recepcionista extends Usuario{
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    //------------ JAVA A HOTEL ------------//
+    /*
+    Este metodo no guarda la referencia al Hotel,
+    Porque la referencia al Hotel se asigna manualmente en el Menu despues de cargar el JSON del Hotel.
+    Recorriendo todos los recepcionistas con hotel.getRecepcionistas() y aplicando un setHotel(hotel).
+    Al iniciar el programa y cargar el Hotel, se vuelve a vincular cada Recepcionista con su Hotel.
+     */
+    public JSONObject recepcionistaAJson(){
+        JSONObject jsonRecepcionista = new JSONObject();
+
+        try{
+
+            jsonRecepcionista = usuarioAJson();
+            jsonRecepcionista.put("tipo", "recepcionista");
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return  jsonRecepcionista;
+    }
+
+    //------------------------//
+
+
 
 }

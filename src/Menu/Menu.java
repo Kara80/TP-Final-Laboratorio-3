@@ -87,11 +87,11 @@ public class Menu {
         Hotel hotel = new Hotel();
 
         // Crear un recepcionista con referencia al hotel
-        Recepcionista recepcionista = new Recepcionista("123", "Juan", "Argentina", "Calle Falsa 123", hotel);
+        Recepcionista recepcionista = new Recepcionista("123", "Juan", "Argentina", "Calle Falsa 123", hotel, "juanjuan", "juan@gmail.com");
 
 
         // Crear un cliente sin reservas
-        Cliente cliente = new Cliente("456", "Pedro", "Argentina", "Av. Siempreviva 742");
+        Cliente cliente = new Cliente("456", "Pedro", "Argentina", "Av. Siempreviva 742","pep", "pep@gmail.com");
 
         try {
             // Intentar hacer check-in

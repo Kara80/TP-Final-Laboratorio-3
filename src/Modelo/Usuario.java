@@ -1,5 +1,8 @@
 package Modelo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 public abstract class Usuario {
@@ -8,11 +11,16 @@ public abstract class Usuario {
     private String nacionalidad;
     private String domicilio;
 
-    public Usuario(String dni, String nombre, String nacionalidad, String domicilio) {
+    private String contraseña;
+    private String mail;
+
+    public Usuario(String dni, String nombre, String nacionalidad, String domicilio, String contraseña, String mail) {
         this.dni = dni;
         this.nombre = nombre;
         this.nacionalidad = nacionalidad;
         this.domicilio = domicilio;
+        this.contraseña = contraseña;
+        this.mail = mail;
     }
 
     public String getDni() {
@@ -47,16 +55,60 @@ public abstract class Usuario {
         this.domicilio = domicilio;
     }
 
+    public String getContraseña() {
+        return contraseña;
+    }
+
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    //-------------- JAVA A JSON ------------//
+    public JSONObject usuarioAJson(){
+        JSONObject jsonUsuario = new JSONObject();
+
+        try{
+
+            jsonUsuario.put("nombre", getNombre());
+            jsonUsuario.put("dni", getDni());
+            jsonUsuario.put("domicilio", getDomicilio());
+            jsonUsuario.put("nacionalidad", getNacionalidad());
+            jsonUsuario.put("contraseña", getContraseña());
+            jsonUsuario.put("contraseña", getContraseña());
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
+        return jsonUsuario;
+    }
+
+    //----------------------------//
+
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
-        return Objects.equals(dni, usuario.dni) && Objects.equals(nacionalidad, usuario.nacionalidad);
+        return  Objects.equals(dni, usuario.dni) &&
+                Objects.equals(nacionalidad, usuario.nacionalidad) &&
+                Objects.equals(contraseña, usuario.contraseña) &&
+                Objects.equals(mail, usuario.mail);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dni, nacionalidad);
+        return Objects.hash(dni, nacionalidad, contraseña, mail);
     }
 
     @Override
