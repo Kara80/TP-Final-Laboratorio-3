@@ -108,4 +108,8 @@ public class Cliente extends Usuario{
         return cliente;
     }
 
+    @Override
+    public String mostrarInformacion() {
+        return "Cliente: " + getNombre() + " - DNI: " + getDni() + " - mail: "+getMail();
+    }
 }
