@@ -5,6 +5,9 @@ import Excepciones.FechaReservaInvalidaException;
 import Excepciones.HabitacionNoDisponibleException;
 import Enum.EstadoDeHabitacion;
 import Excepciones.ReservaNoEncontradaException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ public class Hotel {
         this.habitaciones = new Gestor<>();
         this.reservas = new Gestor<>();
     }
+
 
 
     public Gestor<Habitacion> getHabitaciones() {
@@ -60,6 +64,9 @@ public class Hotel {
 
         //modifica directamente esa habitacion de la lista del hotel
         habitacionDeReserva.agregarReserva(reserva);
+
+        //agrega la reserva a la lista de reservas que tiene un cliente a modo de historial
+        reserva.getCliente().agregarReserva(reserva);
 
         //agrega la reserva a la lista de reservas
         reservas.agregar(reserva);
@@ -134,7 +141,63 @@ public class Hotel {
 
     }
 
+    //--------------------------- JAVA A JSON ---------------------------//
+    public JSONArray administradoresAJson(){
+        JSONArray jsonAdministradores = new JSONArray();
 
+        for (Administrador a : administradores.obtenerTodos()){
+            JSONObject jsonAdministrador = a.adminAJson();
+            jsonAdministradores.put(jsonAdministrador);
+        }
+
+        return jsonAdministradores;
+    }
+
+    public JSONArray recepcionistasAJson(){
+        JSONArray jsonRecepcionistas = new JSONArray();
+
+        for (Recepcionista r : recepcionistas.obtenerTodos()){
+            JSONObject jsonRecepcionista = r.recepcionistaAJson();
+            jsonRecepcionistas.put(jsonRecepcionista);
+        }
+
+        return jsonRecepcionistas;
+    }
+
+    public JSONArray clientesAJson(){
+        JSONArray jsonClientes = new JSONArray();
+
+        for (Cliente c : clientes.obtenerTodos()){
+            JSONObject jsonCliente = c.clienteAJsonConReservas();
+            jsonClientes.put(jsonCliente);
+        }
+
+        return jsonClientes;
+    }
+
+    public JSONArray habitacionesAJson(){
+        JSONArray jsonHabitaciones = new JSONArray();
+
+        for (Habitacion h : habitaciones.obtenerTodos()){
+            JSONObject jsonHabitacion = h.habitacionAJsonConReservas();
+            jsonHabitaciones.put(jsonHabitacion);
+        }
+
+        return jsonHabitaciones;
+    }
+
+    public JSONArray reservasAJson(){
+        JSONArray jsonReservas = new JSONArray();
+
+        for (Reserva r : reservas.obtenerTodos()){
+            JSONObject jsonReserva = r.reservaAJson();
+            jsonReservas.put(jsonReserva);
+        }
+
+        return jsonReservas;
+    }
+
+    //------------------------------------------------------------------//
 
     @Override
     public String toString() {
