@@ -10,6 +10,10 @@ public class Administrador extends Usuario{
         super(dni, nombre, nacionalidad, domicilio, contrasenia, mail);
     }
 
+    public Administrador() {
+
+    }
+
     //------------ JAVA A JSON ------------//
     public JSONObject adminAJson(){
         JSONObject jsonAdmin = new JSONObject();
@@ -26,7 +30,12 @@ public class Administrador extends Usuario{
         return jsonAdmin;
     }
 
-    //------------------------//
+    //--------------- JSON A Administrador ----------------//
+    public static Administrador jsonAAdministrador(JSONObject json){
+        Administrador admin = new Administrador();
+        admin.cargarDesdeJson(json);
+        return admin;
+    }
 
 
 }

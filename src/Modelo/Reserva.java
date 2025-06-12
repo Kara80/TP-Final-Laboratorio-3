@@ -22,6 +22,10 @@ public class Reserva {
         this.fechaFin = fechaFin;
     }
 
+    public Reserva() {
+
+    }
+
     public EstadoDeReserva getEstadoDeReserva() {
         return estadoDeReserva;
     }
@@ -160,7 +164,30 @@ public class Reserva {
 
         return jsonReserva;
     }
-    //---------------------------------------------------------------------------//
+    // ------------------------- Json A Reserva -------------------------//
+    public static Reserva jsonAReserva(JSONObject json){
+        Reserva reserva = new Reserva();
+        try {
+            // Estado de reserva (como string)
+            EstadoDeReserva estado = EstadoDeReserva.valueOf(json.getString("estadoReserva"));
+            reserva.setEstadoDeReserva(estado);
+
+            // Fechas
+            reserva.setFechaInicio(LocalDate.parse(json.getString("fechaInicio")));
+            reserva.setFechaFin(LocalDate.parse(json.getString("fechaFin")));
+
+            // Habitacion
+            JSONObject jsonHabitacion = json.getJSONObject("habitacion");
+            Habitacion habitacion = Habitacion.jsonAHabitacion(jsonHabitacion);
+            reserva.setHabitacion(habitacion);
+
+            reserva.setCliente(null);
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return reserva;
+    }
 
 
 }

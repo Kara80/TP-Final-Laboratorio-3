@@ -16,6 +16,10 @@ public class Cliente extends Usuario{
         this.reservas = new ArrayList<>();
     }
 
+    public Cliente() {
+
+    }
+
     public List<Reserva> getReservas() {
         return reservas;
     }
@@ -84,7 +88,24 @@ public class Cliente extends Usuario{
         return jsonCliente;
     }
 
-    //----------------------------------------------------//
+    //--------------- JSON A Cliente ----------------//
 
+    public static Cliente jsonACliente(JSONObject json){
+        Cliente cliente = new Cliente();
+        cliente.cargarDesdeJson(json);  // ← carga comunes
+
+        try {
+            if (json.has("reservas")) {
+                JSONArray jsonReservas = json.getJSONArray("reservas");
+                for (int i = 0; i < jsonReservas.length(); i++){
+                    Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(i));
+                    cliente.agregarReserva(r);
+                }
+            }
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return cliente;
+    }
 
 }

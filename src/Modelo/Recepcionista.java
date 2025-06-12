@@ -15,6 +15,10 @@ public class Recepcionista extends Usuario{
         this.hotel = hotel;
     }
 
+    public Recepcionista() {
+
+    }
+
     public Hotel getHotel() {
         return hotel;
     }
@@ -68,8 +72,13 @@ public class Recepcionista extends Usuario{
         return  jsonRecepcionista;
     }
 
-    //------------------------//
-
+    //--------------- JSON A Recepcionista ----------------//
+    public static Recepcionista jsonARecepcionista(JSONObject json){
+        Recepcionista recep = new Recepcionista();
+        recep.cargarDesdeJson(json);
+        // El hotel se setea aparte luego manualmente
+        return recep;
+    }
 
 
 }
