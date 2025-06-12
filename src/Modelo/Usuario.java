@@ -91,6 +91,14 @@ public abstract class Usuario {
 
         return jsonUsuario;
     }
+    //--------------- JSON A JAVA (solo carga datos comunes, no se instancia un Usuario) ----------------//
+    public void cargarDesdeJson(JSONObject json){
+        try{
+            this.setDni(json.getString("dni"));
+            this.setNombre(json.getString("nombre"));
+            this.setNacionalidad(json.getString("nacionalidad"));
+            this.setDomicilio(json.getString("domicilio"));
+            this.setContraseña(json.getString("contraseña"));
 
             this.setMail(json.getString("mail"));
         } catch (JSONException e){
