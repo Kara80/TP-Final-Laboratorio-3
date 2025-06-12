@@ -155,7 +155,7 @@ public class Habitacion {
             habitacion.setNumero(json.getInt("numero"));
             habitacion.setCapacidad(json.getInt("capacidad"));
 
-            // EstadoDeHabitacion desde String → Enum
+            // EstadoDeHabitacion desde String
             EstadoDeHabitacion estado = EstadoDeHabitacion.valueOf(json.getString("estadoHbitacion"));
             habitacion.setEstadoHabitacion(estado);
 
