@@ -198,6 +198,66 @@ public class Hotel {
     }
 
     //------------------------------------------------------------------//
+    //--------------------------- JSON A Hotel ---------------------------//
+    public static Hotel jsonAHotel(JSONObject jsonHotel) {
+        Hotel hotel = new Hotel();
+        //Haciendo la deserialización
+        try {
+            //Pasando Administradores de Json a
+            JSONArray jsonAdministradores = jsonHotel.getJSONArray("administradores");
+            for (int i = 0; i < jsonAdministradores.length(); i++) {
+                JSONObject jsonAdmin = jsonAdministradores.getJSONObject(i);
+                Administrador admin = Administrador.jsonAAdministrador(jsonAdmin);
+                hotel.administradores.agregar(admin);
+            }
+
+            // 2. Recepcionistas
+            JSONArray jsonRecepcionistas = jsonHotel.getJSONArray("recepcionistas");
+            for (int i = 0; i < jsonRecepcionistas.length(); i++) {
+                JSONObject jsonRecep = jsonRecepcionistas.getJSONObject(i);
+                Recepcionista recep = Recepcionista.jsonARecepcionista(jsonRecep);
+                hotel.recepcionistas.agregar(recep);
+            }
+
+            // 3. Clientes
+            JSONArray jsonClientes = jsonHotel.getJSONArray("clientes");
+            for (int i = 0; i < jsonClientes.length(); i++) {
+                JSONObject jsonCliente = jsonClientes.getJSONObject(i);
+                Cliente cliente = Cliente.jsonACliente(jsonCliente); // reconstruye reservas internas
+                hotel.clientes.agregar(cliente);
+            }
+
+            // 4. Habitaciones
+            JSONArray jsonHabitaciones = jsonHotel.getJSONArray("habitaciones");
+            for (int i = 0; i < jsonHabitaciones.length(); i++) {
+                JSONObject jsonHabitacion = jsonHabitaciones.getJSONObject(i);
+                Habitacion habitacion = Habitacion.jsonAHabitacion(jsonHabitacion); // sin reservas
+                hotel.habitaciones.agregar(habitacion);
+            }
+
+            // 5. Reservas (conectadas a cliente y habitación ya existentes)
+            JSONArray jsonReservas = jsonHotel.getJSONArray("reservas");
+            for (int i = 0; i < jsonReservas.length(); i++) {
+                JSONObject jsonReserva = jsonReservas.getJSONObject(i);
+                Reserva reserva = Reserva.jsonAReserva(jsonReserva);    //me parece q se puede romper.
+                hotel.reservas.agregar(reserva);
+
+                // reconectar referencias
+                reserva.getCliente().agregarReserva(reserva);
+                try {
+                    reserva.getHabitacion().agregarReserva(reserva);
+                } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+                    System.out.println("Error al agregar reserva a la habitación: " + e.getMessage());
+                }
+            }
+
+        } catch (JSONException e) {
+            System.out.println("Error al parsear JSON del hotel: " + e.getMessage());
+        }
+
+        return hotel;
+    }
+
 
     @Override
     public String toString() {
