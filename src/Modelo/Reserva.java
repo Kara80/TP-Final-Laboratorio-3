@@ -22,6 +22,10 @@ public class Reserva {
         this.fechaFin = fechaFin;
     }
 
+    public Reserva() {
+
+    }
+
     public EstadoDeReserva getEstadoDeReserva() {
         return estadoDeReserva;
     }
