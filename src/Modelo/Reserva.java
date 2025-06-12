@@ -1,5 +1,7 @@
 package Modelo;
 import Enum.EstadoDeReserva;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 
@@ -93,6 +95,72 @@ public class Reserva {
         return true;
     }
 
+    // ------------------------- JAVA A JSON -------------------------//
+    //este es el metodo a invocar en Hotel
+    public JSONObject reservaAJson(){
+        JSONObject jsonReserva = new JSONObject();
+
+        try{
+
+            JSONObject jsonCliente = getCliente().clienteAJson();
+            jsonReserva.put("cliente", jsonCliente);
+
+            jsonReserva.put("estadoReserva", getEstadoDeReserva());
+            jsonReserva.put("fechaInicio", getFechaInicio().toString());
+            jsonReserva.put("fechaFin", getFechaFin());
+
+            JSONObject jsonHabitacion = new JSONObject();
+            jsonHabitacion = getHabitacion().habitacionAJson();
+            jsonReserva.put("habitacion", jsonHabitacion);
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return jsonReserva;
+    }
+
+    //no pasa cliente para evitar bucle cuando se la llame en Cliente
+    public JSONObject reservaAJsonSinCliente(){
+        JSONObject jsonReserva = new JSONObject();
+
+        try{
+            jsonReserva.put("estadoReserva", getEstadoDeReserva());
+            jsonReserva.put("fechaInicio", getFechaInicio().toString());
+            jsonReserva.put("fechaFin", getFechaFin());
+
+            JSONObject jsonHabitacion = getHabitacion().habitacionAJson();
+            jsonReserva.put("habitacion", jsonHabitacion);
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return jsonReserva;
+    }
+
+    //no pasa habitacion para evitar bucle cuando se la llame en Habitacion
+    public JSONObject reservaAJsonSinHabitacion(){
+        JSONObject jsonReserva = new JSONObject();
+
+        try{
+            JSONObject jsonCliente = new JSONObject();
+            jsonCliente = getCliente().clienteAJson();
+            jsonReserva.put("cliente", jsonCliente);
+
+            jsonReserva.put("estadoReserva", getEstadoDeReserva());
+            jsonReserva.put("fechaInicio", getFechaInicio().toString());
+            jsonReserva.put("fechaFin", getFechaFin());
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return jsonReserva;
+    }
+    //---------------------------------------------------------------------------//
 
 
 }
