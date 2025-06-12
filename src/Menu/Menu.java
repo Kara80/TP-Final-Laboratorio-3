@@ -101,6 +101,11 @@ public class Menu {
             System.out.println("⚠️ Error: " + e.getMessage());
         }
 
+        //Creando la reserva
+        LocalDate inicio = LocalDate.now();
+        LocalDate fin = LocalDate.of(2025, 7, 15);
+        Habitacion h = new Habitacion(11, 3);
+        Reserva reserva = new Reserva(h, cliente1, inicio, fin);
 
         try {
             hotel.agregarReserva(reserva);
