@@ -23,6 +23,9 @@ public class Menu {
 
     public void mostrarMenu() {
         int opcion = -1;
+        if(scanner == null){
+            scanner = new Scanner(System.in);
+        }
 
         do {
             System.out.println("\n========= MENÚ PRINCIPAL =========");
