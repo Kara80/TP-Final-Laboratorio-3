@@ -27,6 +27,10 @@ public class Menu {
             scanner = new Scanner(System.in);
         }
 
+        if(hotel == null){
+            hotel = new Hotel();
+        }
+
         do {
             System.out.println("\n========= MENÚ PRINCIPAL =========");
             System.out.println("1. Listar habitaciones disponibles");
