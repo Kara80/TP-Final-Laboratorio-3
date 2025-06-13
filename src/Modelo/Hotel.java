@@ -344,6 +344,46 @@ public class Hotel {
         }
     }
 
+    public void grabarReservas(){
+
+        try{
+            JsonUtiles.grabarUnJson(reservasAJson(),"Reservas.json");
+        }
+        catch(Exception e){
+            System.out.println("No se ha podido grabar el archivo");
+        }
+    }
+
+    public void grabarClientes(){
+
+        try{
+            JsonUtiles.grabarUnJson(clientesAJson(),"Clientes.json");
+        }
+        catch(Exception e){
+            System.out.println("No se ha podido grabar el archivo");
+        }
+    }
+
+    public void grabarAdministradores(){
+
+        try{
+            JsonUtiles.grabarUnJson(administradoresAJson(),"Administradores.json");
+        }
+        catch(Exception e){
+            System.out.println("No se ha podido grabar el archivo");
+        }
+    }
+
+    public void grabarRecepcionistas(){
+
+        try {
+            JsonUtiles.grabarUnJson(recepcionistasAJson(),"Recepcionistas.json");
+        }
+        catch(Exception e){
+            System.out.println("No se ha podido grabar el archivo");
+        }
+    }
+
     @Override
     public String toString() {
         return "Hotel{" +
