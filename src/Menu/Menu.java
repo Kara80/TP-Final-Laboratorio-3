@@ -13,6 +13,7 @@ public class Menu {
     private Scanner scanner;
 
 
+
     public Menu() {
         this.hotel = new Hotel();
         this.cargarDatos();
