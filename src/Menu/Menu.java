@@ -8,20 +8,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-public class Menu {
+public class Menu{
     private Hotel hotel;
     private Scanner scanner;
 
-
-
-    public Menu() {
+    public Menu(){
         this.hotel = new Hotel();
         this.cargarDatos();
         this.scanner = new Scanner(System.in);
     }
 
-
-    public void mostrarMenu() {
+    public void mostrarMenu(){
         System.out.println("===== Bienvenido al sistema del Hotel =====");
         System.out.print("Ingrese su mail: ");
         String mail = scanner.nextLine();
