@@ -1,0 +1,59 @@
+[
+    {
+        "tipo": "cliente",
+        "domicilio": "racedo",
+        "mail": "juan@gmai.",
+        "reservas": [{
+            "fechaInicio": "2025-06-13",
+            "estadoReserva": "reservada",
+            "fechaFin": "2025-06-25",
+            "habitacion": {
+                "numero": 1,
+                "estadoHbitacion": "disponible",
+                "capacidad": 2
+            }
+        }],
+        "nombre": "Juan Pérez",
+        "dni": "12345678",
+        "nacionalidad": "argentina",
+        "contraseña": "mdp"
+    },
+    {
+        "tipo": "cliente",
+        "domicilio": "gueme",
+        "mail": "kari@gmai.",
+        "reservas": [{
+            "fechaInicio": "2025-07-25",
+            "estadoReserva": "reservada",
+            "fechaFin": "2025-09-30",
+            "habitacion": {
+                "numero": 2,
+                "estadoHbitacion": "disponible",
+                "capacidad": 2
+            }
+        }],
+        "nombre": "kari Pérez",
+        "dni": "12312342",
+        "nacionalidad": "argentina",
+        "contraseña": "mdp"
+    },
+    {
+        "tipo": "cliente",
+        "domicilio": "39",
+        "mail": "luca@gmai.",
+        "reservas": [{
+            "fechaInicio": "2025-06-21",
+            "estadoReserva": "reservada",
+            "fechaFin": "2025-06-28",
+            "habitacion": {
+                "numero": 3,
+                "estadoHbitacion": "disponible",
+                "capacidad": 4
+            }
+        }],
+        "nombre": "luca Pérez",
+        "dni": "45645632",
+        "nacionalidad": "argentina",
+        "contraseña": "mdp"
+    }
+]

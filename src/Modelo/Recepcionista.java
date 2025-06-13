@@ -33,9 +33,9 @@ public class Recepcionista extends Usuario{
 
             hotel.checkIn(cliente);
         } catch (HabitacionNoDisponibleException e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         } catch (ReservaNoEncontradaException e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -44,9 +44,9 @@ public class Recepcionista extends Usuario{
         try{
             hotel.checkOut(cliente);
         } catch (HabitacionNoDisponibleException e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         } catch (ReservaNoEncontradaException e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         }
     }
 
