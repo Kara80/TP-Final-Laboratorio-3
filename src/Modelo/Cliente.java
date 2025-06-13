@@ -41,6 +41,34 @@ public class Cliente extends Usuario{
         }
     }
 
+
+    public List<String> mostrarReservas(){
+        List<String> descripciones = new ArrayList<>();
+
+        if (this.getReservas().isEmpty()) {
+            descripciones.add("No tienes reservas registradas.");
+            return descripciones;
+        }
+
+        for (Reserva reserva : this.getReservas()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Estado de reserva: ").append(reserva.getEstadoDeReserva()).append("\n");
+            sb.append("Fecha de inicio: ").append(reserva.getFechaInicio()).append("\n");
+            sb.append("Fecha de fin: ").append(reserva.getFechaFin()).append("\n");
+
+            Habitacion h = reserva.getHabitacion();
+            sb.append("CNumero de habitacion: ").append(h.getNumero());
+            sb.append("Capacidad: ").append(h.getCapacidad()).append("\n");
+            sb.append("Estado de habitación: ").append(h.getEstadoHabitacion()).append("\n");
+
+            descripciones.add(sb.toString());
+        }
+
+        return descripciones;
+
+    }
+
+
     //-------------------------- JAVA A JSON --------------------------//
     /*
     Pasa cliente a json pero no incluye la de pasar reservas para evitar un bucle porque

@@ -3,25 +3,221 @@ package Menu;
 import Excepciones.FechaReservaInvalidaException;
 import Excepciones.HabitacionNoDisponibleException;
 import Modelo.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Scanner;
 
 public class Menu {
+    private Hotel hotel;
+    private Scanner scanner;
 
 
-    public static void main() {
+    public Menu(Hotel hotel) {
+        this.hotel = hotel;
+        this.scanner = new Scanner(System.in);
+    }
+
+    public Menu() {
+    }
+
+    public void mostrarMenu() {
+        int opcion = -1;
+
+        do {
+            System.out.println("\n========= MENÚ PRINCIPAL =========");
+            System.out.println("1. Listar habitaciones disponibles");
+            System.out.println("2. Agregar una reserva");
+            System.out.println("3. Hacer check-in");
+            System.out.println("4. Hacer check-out");
+            System.out.println("5. Mostrar todos los clientes");
+            System.out.println("6. Mostrar todas las reservas");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
+
+            try {
+                opcion = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Ingrese un número.");
+                continue;
+            }
+
+            switch (opcion) {
+                case 1 -> listarHabitacionesDisponibles();
+                case 2 -> agregarReserva();
+                case 3 -> hacerCheckIn();
+                case 4 -> hacerCheckOut();
+                case 5 -> mostrarClientes();
+                case 6 -> mostrarReservas();
+                case 0 -> System.out.println("Saliendo del sistema...");
+                default -> System.out.println("Opción inválida.");
+            }
+
+        } while (opcion != 0);
+    }
+
+    private void listarHabitacionesDisponibles() {
+        try {
+            System.out.println("Ingrese la fecha de inicio (YYYY-MM-DD): ");
+            LocalDate inicio = LocalDate.parse(scanner.nextLine());
+
+            System.out.println("Ingrese la fecha de fin (YYYY-MM-DD): ");
+            LocalDate fin = LocalDate.parse(scanner.nextLine());
+
+            List<Habitacion> disponibles = hotel.obtenerHabitacionesDisponibles(inicio, fin);
+
+            if (disponibles.isEmpty()) {
+                System.out.println("No hay habitaciones disponibles en ese período.");
+            } else {
+                System.out.println("Habitaciones disponibles:");
+                for (Habitacion h : disponibles) {
+                    System.out.println(h);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error al procesar fechas: " + e.getMessage());
+        }
+    }
+
+    private void agregarReserva() {
+        try {
+            System.out.println("Ingrese el DNI del cliente:");
+            String dniCliente = scanner.nextLine();
+
+            Cliente cliente = null;
+            for (Cliente c : hotel.getClientes().obtenerTodos()) {
+                if (c.getDni().equals(dniCliente)) {
+                    cliente = c;
+                    break;
+                }
+            }
+
+            if (cliente == null) {
+                System.out.println("Cliente no encontrado.");
+                return;
+            }
+
+            System.out.println("Ingrese el número de habitación:");
+            int numeroHabitacion = Integer.parseInt(scanner.nextLine());
+
+            Habitacion habitacion = null;
+            for (Habitacion h : hotel.getHabitaciones().obtenerTodos()) {
+                if (h.getNumero() == numeroHabitacion) {
+                    habitacion = h;
+                    break;
+                }
+            }
+
+            if (habitacion == null) {
+                System.out.println("Habitación no encontrada.");
+                return;
+            }
+
+            System.out.println("Ingrese la fecha de inicio (YYYY-MM-DD):");
+            LocalDate inicio = LocalDate.parse(scanner.nextLine());
+
+            System.out.println("Ingrese la fecha de fin (YYYY-MM-DD):");
+            LocalDate fin = LocalDate.parse(scanner.nextLine());
+
+            Reserva reserva = new Reserva(habitacion, cliente, inicio, fin);
+            hotel.agregarReserva(reserva);
+
+            System.out.println("Reserva agregada con éxito.");
+        } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+            System.out.println("Error al agregar reserva: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error general: " + e.getMessage());
+        }
+    }
+
+    private void hacerCheckIn() {
+        try {
+            System.out.println("Ingrese el DNI del cliente para hacer Check-In:");
+            String dni = scanner.nextLine();
+
+            Cliente cliente = null;
+            for (Cliente c : hotel.getClientes().obtenerTodos()) {
+                if (c.getDni().equals(dni)) {
+                    cliente = c;
+                    break;
+                }
+            }
+
+            if (cliente == null) {
+                System.out.println("Cliente no encontrado.");
+                return;
+            }
+
+            // Simulamos que lo hace el primer recepcionista
+            Recepcionista recepcionista = hotel.getRecepcionistas().obtenerTodos().get(0);
+            recepcionista.setHotel(hotel);
+            recepcionista.hacerCheckIn(cliente);
+
+            System.out.println("Check-in realizado correctamente.");
+        } catch (RuntimeException e) {
+            System.out.println("Error al hacer Check-in: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    private void hacerCheckOut() {
+        try {
+            System.out.println("Ingrese el DNI del cliente para hacer Check-Out:");
+            String dni = scanner.nextLine();
+
+            Cliente cliente = null;
+            for (Cliente c : hotel.getClientes().obtenerTodos()) {
+                if (c.getDni().equals(dni)) {
+                    cliente = c;
+                    break;
+                }
+            }
+
+            if (cliente == null) {
+                System.out.println("Cliente no encontrado.");
+                return;
+            }
+
+            Recepcionista recepcionista = hotel.getRecepcionistas().obtenerTodos().get(0);
+            recepcionista.setHotel(hotel);
+            recepcionista.hacerCheckOut(cliente);
+
+            System.out.println("Check-out realizado correctamente.");
+        } catch (RuntimeException e) {
+            System.out.println("Error al hacer Check-out: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    private void mostrarClientes() {
+        System.out.println("\nLista de clientes:");
+        for (Cliente c : hotel.getClientes().obtenerTodos()) {
+            System.out.println(c);
+        }
+    }
+
+    private void mostrarReservas() {
+        System.out.println("\nLista de reservas:");
+        for (Reserva r : hotel.getReservas().obtenerTodos()) {
+            System.out.println("Cliente: " + r.getCliente().getNombre() + ", Habitación: " +
+                    r.getHabitacion().getNumero() + ", Desde: " + r.getFechaInicio() + ", Hasta: " + r.getFechaFin());
+        }
+    }
+}
+
+//    public static void main() {
 
 
 
 
-        /// Acá creamos 3 habitaciones, la segunda está repetida, así podemos ver como se maneja la excepcion
+            //Ejemplos para comprobar la funcionalidad de lso metodos
+
 
 /*
         Habitacion habitacion = new Habitacion(101, 2); // Supongamos que su constructor recibe un número
-        Cliente cliente = new Cliente("12345678","Juan Pérez", "argentina","racedo","mdp","juan@gmai.");
+        Cliente cliente = new Cliente("12345678Juan Pérez", "Juan Pérez","argentina", "mdp");
 
         LocalDate fechaInicio1 = LocalDate.of(2025, 6, 20);
         LocalDate fechaFin1 = LocalDate.of(2025, 6, 25);
@@ -30,7 +226,7 @@ public class Menu {
         try {
             habitacion.agregarReserva(reserva1);
             System.out.println("Reserva 1 agregada correctamente.");
-        } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+        } catch (Exception e) {
             System.out.println("Error al agregar reserva 1: " + e.getMessage());
         }
 
@@ -42,7 +238,7 @@ public class Menu {
         try {
             habitacion.agregarReserva(reserva2);
             System.out.println("Reserva 2 agregada correctamente.");
-        } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+        } catch (Exception e) {
             System.out.println("Error al agregar reserva 2: " + e.getMessage());
         }
 
@@ -54,15 +250,12 @@ public class Menu {
         try {
             habitacion.agregarReserva(reserva3);
             System.out.println("Reserva 3 agregada correctamente.");
-        } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+        } catch (Exception e) {
             System.out.println("Error al agregar reserva 3: " + e.getMessage());
         }
-
 */
 
-
 /*
-    /// Pruebas de carga de datos en hotel,
         Hotel hotel = new Hotel();
 
         hotel.getHabitaciones().agregar(new Habitacion(12, 2));
@@ -70,7 +263,7 @@ public class Menu {
 
         LocalDate inicio = LocalDate.of(2025, 6, 10);
         LocalDate fin = LocalDate.of(2025, 6, 15);
-    ///Listado de habitaciones disponibles segun una fecha
+
         List<Habitacion> habitacionesDisponibles = hotel.obtenerHabitacionesDisponibles(inicio, fin);
         System.out.println("Todas las habitaciones disponibles entre el " + inicio + " y el " + fin + " : ");
         for (Habitacion h : habitacionesDisponibles){
@@ -78,13 +271,12 @@ public class Menu {
                     ", Capacidad para " + h.getCapacidad() + " personas" );
         }
 
-        Cliente cliente = new Cliente("4124214","luca", "argentina","guemes","mdp","luca@gmai.");
+        Cliente cliente = new Cliente("1234", "luca", "argetnina", "mdp");
         Habitacion h = new Habitacion(11, 3);
         LocalDate fechaInicio = LocalDate.of(2025, 6, 10);
         LocalDate fechaFin = LocalDate.of(2025, 6, 7);
         Reserva reserva = new Reserva(h, cliente, fechaInicio, fechaFin);
-    /// Se intenta agregar una reserva mal cargada, aqui entra en juego la funcion chocaConFechas que maneja estos posibles errores
-    /// con excepciones.
+
         try {
             hotel.agregarReserva(reserva);
         } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
@@ -92,9 +284,7 @@ public class Menu {
         }
 */
 
-
-/*
-        /// Ahora mostraremos las funciones del recepcionista
+        /*
         Hotel hotel = new Hotel();
 
         // Crear un recepcionista con referencia al hotel
@@ -102,11 +292,11 @@ public class Menu {
 
 
         // Crear un cliente sin reservas
-        Cliente cliente1 = new Cliente("456", "Pedro", "Argentina", "Av. Siempreviva 742", "pep", "pep@gmail.com");
+        Cliente cliente = new Cliente("456", "Pedro", "Argentina", "Av. Siempreviva 742","pep", "pep@gmail.com");
 
         try {
             // Intentar hacer check-in
-            recepcionista.hacerCheckIn(cliente1);
+            recepcionista.hacerCheckIn(cliente);
         } catch (RuntimeException e) {
             // Captura el error lanzado y lo muestra
             System.out.println("⚠️ Error: " + e.getMessage());
@@ -142,96 +332,8 @@ public class Menu {
             // Captura el error lanzado y lo muestra
             System.out.println("⚠️ Error: " + e.getMessage());
         }
+
 */
+   // }
 
-        /*
-        Hotel hotel = new Hotel();
-
-        Habitacion habitacion1 = new Habitacion(1, 2);
-        Habitacion habitacion2 = new Habitacion(2, 2);
-        Habitacion habitacion3 = new Habitacion(3, 4);
-        Habitacion habitacion4 = new Habitacion(4, 4);
-
-        Cliente cliente1 = new Cliente("12345678","Juan Pérez", "argentina","racedo","mdp","juan@gmai.");
-        Cliente cliente2 = new Cliente("12312342","kari Pérez", "argentina","gueme","mdp","kari@gmai.");
-        Cliente cliente3 = new Cliente("45645632","luca Pérez", "argentina","39","mdp","luca@gmai.");
-
-        LocalDate fechaInicio1 = LocalDate.of(2025, 6, 20);
-        LocalDate fechaFin1 = LocalDate.of(2025, 6, 25);
-        Reserva reserva1 = new Reserva(habitacion1, cliente1, fechaInicio1, fechaFin1);
-        LocalDate fechaInicio2 = LocalDate.of(2025, 7, 25);
-        LocalDate fechaFin2 = LocalDate.of(2025, 9, 30);
-        Reserva reserva2 = new Reserva(habitacion2, cliente2, fechaInicio2, fechaFin2);
-        LocalDate fechaInicio3 = LocalDate.of(2025, 6, 21);
-        LocalDate fechaFin3 = LocalDate.of(2025, 6, 28);
-        Reserva reserva3 = new Reserva(habitacion3, cliente3, fechaInicio3, fechaFin3);
-
-        try {
-            hotel.agregarReserva(reserva1);
-            hotel.agregarReserva(reserva2);
-            hotel.agregarReserva(reserva3);
-
-        } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
-            System.out.println("Error al agregar reserva 1: " + e.getMessage());
-        }
-
-        Administrador administrador1 =new Administrador("7657435","Nica", "argentina","Utn","UTN10","Nica@gmail");
-        Recepcionista recepcionista1 =new Recepcionista("63424124","Lucre","Brazil","utn",hotel,"contrasenia","lucre@gmail");
-
-        hotel.getClientes().agregar(cliente1);
-        hotel.getClientes().agregar(cliente2);
-        hotel.getClientes().agregar(cliente3);
-
-        hotel.getRecepcionistas().agregar(recepcionista1);
-        hotel.getAdministradores().agregar(administrador1);
-
-        hotel.getHabitaciones().agregar(habitacion1);
-        hotel.getHabitaciones().agregar(habitacion2);
-        hotel.getHabitaciones().agregar(habitacion3);
-        hotel.getHabitaciones().agregar(habitacion4);
-
-        hotel.getHabitaciones().mostrar();
-        hotel.getRecepcionistas().mostrar();
-        hotel.getClientes().mostrar();
-        hotel.getAdministradores().mostrar();
-        hotel.getReservas().mostrar();
-
-        hotel.grabarClientes();
-        hotel.grabarAdministradores();
-        hotel.grabarHabitaciones();
-        hotel.grabarReservas();
-        hotel.grabarRecepcionistas();*/
-
-/*
-        Hotel hotel = new Hotel();
-        hotel.leerAdministradores();
-        hotel.leerClientes();
-        hotel.leerReservas();
-        hotel.leerHabitaciones();
-        hotel.leerRecepcionistas();
-        hotel.getHabitaciones().mostrar();
-        hotel.getReservas().mostrar();
-        hotel.getClientes().mostrar();
-        hotel.getAdministradores().mostrar();
-        hotel.getRecepcionistas().mostrar();
-
-
-        System.out.println(hotel.getHabitaciones().toString());
-
-        LocalDate fechaInicio1 = LocalDate.of(2025, 6, 20);
-        LocalDate fechaFin1 = LocalDate.of(2025, 6, 25);
-        List<Habitacion> habitacionesDisponibles = hotel.obtenerHabitacionesDisponibles(fechaInicio1, fechaFin1);
-        System.out.println("Todas las habitaciones disponibles entre el " + fechaInicio1 + " y el " + fechaFin1 + " : ");
-        for (Habitacion h : habitacionesDisponibles){
-            System.out.println("Habitacion numero: "+ h.getNumero() +
-                    ", Capacidad para " + h.getCapacidad() + " personas" );
-        }*/
-/*
-        LocalDate fechaInicio1 = LocalDate.of(2025, 6, 20);
-        LocalDate fechaFin1 = LocalDate.of(2025, 6, 25);
-        List<Habitacion> habitacionesDisponibles = hotel.obtenerHabitacionesDisponibles(fechaInicio1, fechaFin1);
-        System.out.println(habitacionesDisponibles.toString());*/
-        //Ejemplos para comprobar la funcionalidad de los metodos
-    }
-
-}
+//}
