@@ -36,10 +36,26 @@ public class Hotel {
         return habitaciones;
     }
 
+    public Gestor<Administrador> getAdministradores() {
+        return administradores;
+    }
+
+    public Gestor<Recepcionista> getRecepcionistas() {
+        return recepcionistas;
+    }
+
+    public Gestor<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public Gestor<Reserva> getReservas() {
+        return reservas;
+    }
+
     /*
-    Recorre la lista de habitaciones y devuelve una lista con
-    todas las habitaciones disponibles entre los dias dados.
-      */
+        Recorre la lista de habitaciones y devuelve una lista con
+        todas las habitaciones disponibles entre los dias dados.
+          */
     public List<Habitacion> obtenerHabitacionesDisponibles(LocalDate fechaInicio, LocalDate fechafinal){
         List<Habitacion> habitacionesDisponibles = new ArrayList<>();
 

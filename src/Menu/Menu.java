@@ -6,11 +6,212 @@ import Modelo.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Scanner;
 
 public class Menu {
 
+    private Hotel hotel;
+    private Scanner scanner;
 
-    public static void main() {
+
+    public Menu(Hotel hotel) {
+        this.hotel = hotel;
+        this.scanner = new Scanner(System.in);
+    }
+
+    public Menu() {
+    }
+
+    public void mostrarMenu() {
+        int opcion = -1;
+
+        do {
+            System.out.println("\n========= MENÚ PRINCIPAL =========");
+            System.out.println("1. Listar habitaciones disponibles");
+            System.out.println("2. Agregar una reserva");
+            System.out.println("3. Hacer check-in");
+            System.out.println("4. Hacer check-out");
+            System.out.println("5. Mostrar todos los clientes");
+            System.out.println("6. Mostrar todas las reservas");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
+
+            try {
+                opcion = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Ingrese un número.");
+                continue;
+            }
+
+            switch (opcion) {
+                case 1 -> listarHabitacionesDisponibles();
+                case 2 -> agregarReserva();
+                case 3 -> hacerCheckIn();
+                case 4 -> hacerCheckOut();
+                case 5 -> mostrarClientes();
+                case 6 -> mostrarReservas();
+                case 0 -> System.out.println("Saliendo del sistema...");
+                default -> System.out.println("Opción inválida.");
+            }
+
+        } while (opcion != 0);
+    }
+
+    private void listarHabitacionesDisponibles() {
+        try {
+            System.out.println("Ingrese la fecha de inicio (YYYY-MM-DD): ");
+            LocalDate inicio = LocalDate.parse(scanner.nextLine());
+
+            System.out.println("Ingrese la fecha de fin (YYYY-MM-DD): ");
+            LocalDate fin = LocalDate.parse(scanner.nextLine());
+
+            List<Habitacion> disponibles = hotel.obtenerHabitacionesDisponibles(inicio, fin);
+
+            if (disponibles.isEmpty()) {
+                System.out.println("No hay habitaciones disponibles en ese período.");
+            } else {
+                System.out.println("Habitaciones disponibles:");
+                for (Habitacion h : disponibles) {
+                    System.out.println(h);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error al procesar fechas: " + e.getMessage());
+        }
+    }
+
+    private void agregarReserva() {
+        try {
+            System.out.println("Ingrese el DNI del cliente:");
+            String dniCliente = scanner.nextLine();
+
+            Cliente cliente = null;
+            for (Cliente c : hotel.getClientes().obtenerTodos()) {
+                if (c.getDni().equals(dniCliente)) {
+                    cliente = c;
+                    break;
+                }
+            }
+
+            if (cliente == null) {
+                System.out.println("Cliente no encontrado.");
+                return;
+            }
+
+            System.out.println("Ingrese el número de habitación:");
+            int numeroHabitacion = Integer.parseInt(scanner.nextLine());
+
+            Habitacion habitacion = null;
+            for (Habitacion h : hotel.getHabitaciones().obtenerTodos()) {
+                if (h.getNumero() == numeroHabitacion) {
+                    habitacion = h;
+                    break;
+                }
+            }
+
+            if (habitacion == null) {
+                System.out.println("Habitación no encontrada.");
+                return;
+            }
+
+            System.out.println("Ingrese la fecha de inicio (YYYY-MM-DD):");
+            LocalDate inicio = LocalDate.parse(scanner.nextLine());
+
+            System.out.println("Ingrese la fecha de fin (YYYY-MM-DD):");
+            LocalDate fin = LocalDate.parse(scanner.nextLine());
+
+            Reserva reserva = new Reserva(habitacion, cliente, inicio, fin);
+            hotel.agregarReserva(reserva);
+
+            System.out.println("Reserva agregada con éxito.");
+        } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+            System.out.println("Error al agregar reserva: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error general: " + e.getMessage());
+        }
+    }
+
+    private void hacerCheckIn() {
+        try {
+            System.out.println("Ingrese el DNI del cliente para hacer Check-In:");
+            String dni = scanner.nextLine();
+
+            Cliente cliente = null;
+            for (Cliente c : hotel.getClientes().obtenerTodos()) {
+                if (c.getDni().equals(dni)) {
+                    cliente = c;
+                    break;
+                }
+            }
+
+            if (cliente == null) {
+                System.out.println("Cliente no encontrado.");
+                return;
+            }
+
+            // Simulamos que lo hace el primer recepcionista
+            Recepcionista recepcionista = hotel.getRecepcionistas().obtenerTodos().get(0);
+            recepcionista.setHotel(hotel);
+            recepcionista.hacerCheckIn(cliente);
+
+            System.out.println("Check-in realizado correctamente.");
+        } catch (RuntimeException e) {
+            System.out.println("Error al hacer Check-in: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    private void hacerCheckOut() {
+        try {
+            System.out.println("Ingrese el DNI del cliente para hacer Check-Out:");
+            String dni = scanner.nextLine();
+
+            Cliente cliente = null;
+            for (Cliente c : hotel.getClientes().obtenerTodos()) {
+                if (c.getDni().equals(dni)) {
+                    cliente = c;
+                    break;
+                }
+            }
+
+            if (cliente == null) {
+                System.out.println("Cliente no encontrado.");
+                return;
+            }
+
+            Recepcionista recepcionista = hotel.getRecepcionistas().obtenerTodos().get(0);
+            recepcionista.setHotel(hotel);
+            recepcionista.hacerCheckOut(cliente);
+
+            System.out.println("Check-out realizado correctamente.");
+        } catch (RuntimeException e) {
+            System.out.println("Error al hacer Check-out: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
+    }
+
+    private void mostrarClientes() {
+        System.out.println("\nLista de clientes:");
+        for (Cliente c : hotel.getClientes().obtenerTodos()) {
+            System.out.println(c);
+        }
+    }
+
+    private void mostrarReservas() {
+        System.out.println("\nLista de reservas:");
+        for (Reserva r : hotel.getReservas().obtenerTodos()) {
+            System.out.println("Cliente: " + r.getCliente().getNombre() + ", Habitación: " +
+                    r.getHabitacion().getNumero() + ", Desde: " + r.getFechaInicio() + ", Hasta: " + r.getFechaFin());
+        }
+    }
+}
+
+//    public static void main() {
+
+
+
 
             //Ejemplos para comprobar la funcionalidad de lso metodos
 
@@ -84,6 +285,7 @@ public class Menu {
         }
 */
 
+        /*
         Hotel hotel = new Hotel();
 
         // Crear un recepcionista con referencia al hotel
@@ -132,7 +334,7 @@ public class Menu {
             System.out.println("⚠️ Error: " + e.getMessage());
         }
 
+*/
+   // }
 
-    }
-
-}
+//}
