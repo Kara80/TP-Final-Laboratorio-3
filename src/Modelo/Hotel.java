@@ -62,7 +62,6 @@ public class Hotel {
         for (Habitacion h : habitaciones.obtenerTodos()){
 
             if (h.estaDisponible(fechaInicio, fechafinal)){
-
                 habitacionesDisponibles.add(h);
             }
         }
@@ -160,6 +159,8 @@ public class Hotel {
     }
 
     //--------------------------- JAVA A JSON ---------------------------//
+
+
     public JSONArray administradoresAJson(){
         JSONArray jsonAdministradores = new JSONArray();
 
@@ -193,7 +194,7 @@ public class Hotel {
         return jsonClientes;
     }
 
-    public JSONArray habitacionesAJson(){
+    public JSONArray habitacionAJsonConReservas(){
         JSONArray jsonHabitaciones = new JSONArray();
 
         for (Habitacion h : habitaciones.obtenerTodos()){
@@ -217,7 +218,7 @@ public class Hotel {
 
     //------------------------------------------------------------------//
     //--------------------------- JSON A Hotel ---------------------------//
-    public static Hotel jsonAHotel(JSONObject jsonHotel) {
+    /*public static Hotel jsonAHotel(JSONArray jsonHotel) {
         Hotel hotel = new Hotel();
         //Haciendo la deserialización
         try {
@@ -274,7 +275,7 @@ public class Hotel {
         }
 
         return hotel;
-    }
+    }*/
 
 
     //-------------------------Lectura JSON-----------------------------//
@@ -353,7 +354,7 @@ public class Hotel {
     public void grabarHabitaciones(){
 
         try{
-            JsonUtiles.grabarUnJson(habitacionesAJson(),"Habitaciones.json");
+            JsonUtiles.grabarUnJson(habitacionAJsonConReservas(),"Habitaciones.json");
         }
         catch(Exception e){
             System.out.println("No se ha podido grabar el archivo");

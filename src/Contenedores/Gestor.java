@@ -29,4 +29,10 @@ public class Gestor <T> {
         return new ArrayList<>(elementos);
     }
 
+    @Override
+    public String toString() {
+        return "Gestor{" +
+                "elementos=" + elementos +
+                '}';
+    }
 }

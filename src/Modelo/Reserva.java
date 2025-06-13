@@ -150,8 +150,7 @@ public class Reserva {
         JSONObject jsonReserva = new JSONObject();
 
         try{
-            JSONObject jsonCliente = new JSONObject();
-            jsonCliente = getCliente().clienteAJson();
+            JSONObject jsonCliente = getCliente().clienteAJson();
             jsonReserva.put("cliente", jsonCliente);
 
             jsonReserva.put("estadoReserva", getEstadoDeReserva());
@@ -178,10 +177,13 @@ public class Reserva {
 
             // Habitacion
             JSONObject jsonHabitacion = json.getJSONObject("habitacion");
-            Habitacion habitacion = Habitacion.jsonAHabitacion(jsonHabitacion);
+            Habitacion habitacion = Habitacion.jsonAHabitacionSinReserva(jsonHabitacion);
             reserva.setHabitacion(habitacion);
 
-            reserva.setCliente(null);
+            //reserva.setCliente(null);
+            JSONObject jsonCliente = json.getJSONObject("cliente");
+            Cliente clientito = Cliente.jsonAClienteSinReserva(jsonCliente);
+            reserva.setCliente(clientito);
 
         } catch (JSONException e){
             e.printStackTrace();
@@ -189,5 +191,14 @@ public class Reserva {
         return reserva;
     }
 
-
+    @Override
+    public String toString() {
+        return "Reserva{" +
+                "estadoDeReserva=" + estadoDeReserva +
+                ", habitacion=" + habitacion +
+                ", cliente=" + cliente +
+                ", fechaInicio=" + fechaInicio +
+                ", fechaFin=" + fechaFin +
+                '}';
+    }
 }

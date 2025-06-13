@@ -83,7 +83,7 @@ public abstract class Usuario {
             jsonUsuario.put("domicilio", getDomicilio());
             jsonUsuario.put("nacionalidad", getNacionalidad());
             jsonUsuario.put("contraseña", getContraseña());
-            jsonUsuario.put("contraseña", getContraseña());
+            jsonUsuario.put("mail", getMail());
         }
         catch (JSONException e){
             e.printStackTrace();
@@ -100,7 +100,6 @@ public abstract class Usuario {
             this.setNacionalidad(json.getString("nacionalidad"));
             this.setDomicilio(json.getString("domicilio"));
             this.setContraseña(json.getString("contraseña"));
-
             this.setMail(json.getString("mail"));
         } catch (JSONException e){
             e.printStackTrace();

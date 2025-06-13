@@ -29,7 +29,6 @@ public class Cliente extends Usuario{
     }
 
     public void agregarReserva(Reserva reserva){
-
         if (reserva != null){
             reservas.add(reserva);
         }
@@ -97,14 +96,24 @@ public class Cliente extends Usuario{
         try {
             if (json.has("reservas")) {
                 JSONArray jsonReservas = json.getJSONArray("reservas");
+                ArrayList<Reserva>reservaAux = new ArrayList<>();
                 for (int i = 0; i < jsonReservas.length(); i++){
                     Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(i));
-                    cliente.agregarReserva(r);
+                    //cliente.agregarReserva(r);
+                    reservaAux.add(r);
                 }
+                cliente.setReservas(reservaAux);
             }
         } catch (JSONException e){
             e.printStackTrace();
         }
+        return cliente;
+    }
+    /// no carga reserva a cliente
+    public static Cliente jsonAClienteSinReserva(JSONObject json){
+        Cliente cliente = new Cliente();
+        cliente.cargarDesdeJson(json);  // ← carga comunes
+
         return cliente;
     }
 

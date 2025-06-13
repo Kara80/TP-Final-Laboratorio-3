@@ -22,6 +22,7 @@ public class Administrador extends Usuario{
 
             jsonAdmin = usuarioAJson();
             jsonAdmin.put("tipo", "administrador");
+
         }
         catch (JSONException e){
             e.printStackTrace();

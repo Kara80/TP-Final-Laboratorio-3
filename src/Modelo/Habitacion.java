@@ -29,6 +29,10 @@ public class Habitacion {
         return reservas;
     }
 
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
+    }
+
     public EstadoDeHabitacion getEstadoHabitacion() {
         return estadoHabitacion;
     }
@@ -136,7 +140,7 @@ public class Habitacion {
                 JSONObject jsonReserva = r.reservaAJsonSinHabitacion();
                 jsonReservas.put(jsonReserva);
             }
-            jsonHabitacion.put("reservas", getReservas());
+            jsonHabitacion.put("reservas", jsonReservas);
 
         }
         catch (JSONException e){
@@ -148,6 +152,7 @@ public class Habitacion {
     }
 
     // ------------------------- JSON A Habitacion -------------------------//
+    //Esta se va a invocar en Hotel :D
     public static Habitacion jsonAHabitacion(JSONObject json){
         Habitacion habitacion = new Habitacion(0, 0);  // valores provisorios, los seteamos enseguida
 
@@ -159,8 +164,36 @@ public class Habitacion {
             EstadoDeHabitacion estado = EstadoDeHabitacion.valueOf(json.getString("estadoHbitacion"));
             habitacion.setEstadoHabitacion(estado);
 
+
+            //habitacion.getReservas().clear();
+            JSONArray jsonReservas = json.getJSONArray("reservas");
+            ArrayList<Reserva>reservasAux = new ArrayList<>();
+            for (int i = 0 ; i< jsonReservas.length(); i++){
+                Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(i));
+                reservasAux.add(r);
+            }
+            habitacion.setReservas(reservasAux);
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return habitacion;
+    }
+    //Esta se va a invocar en Reserva, no carga Reservas
+    public static Habitacion jsonAHabitacionSinReserva(JSONObject json){
+        Habitacion habitacion = new Habitacion(0, 0);  // valores provisorios, los seteamos enseguida
+
+        try {
+            habitacion.setNumero(json.getInt("numero"));
+            habitacion.setCapacidad(json.getInt("capacidad"));
+
+            // EstadoDeHabitacion desde String
+            EstadoDeHabitacion estado = EstadoDeHabitacion.valueOf(json.getString("estadoHbitacion"));
+            habitacion.setEstadoHabitacion(estado);
+
             // No cargamos reservas para evitar bucle
-            habitacion.getReservas().clear();
+            //habitacion.getReservas().clear();
 
         } catch (JSONException e){
             e.printStackTrace();
@@ -184,6 +217,6 @@ public class Habitacion {
 
     @Override
     public String toString() {
-        return "Habitación Nº " + getNumero() + " - Capacidad: " + getCapacidad()+ "Estado Actual: "+getEstadoHabitacion();
+        return "Habitación Nº " + getNumero() + " - Capacidad: " + getCapacidad()+ "Estado Actual: "+getEstadoHabitacion() + " Reserva: "+reservas;
     }
 }
