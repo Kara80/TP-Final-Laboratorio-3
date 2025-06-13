@@ -32,9 +32,7 @@ public class Menu {
         // Buscar usuario
         Usuario usuario = buscarUsuario(mail, contrasenia);
 
-        if (usuario == null) {
-            System.out.println("Credenciales incorrectas o usuario no encontrado.");
-        } else if (usuario instanceof Administrador) {
+        if (usuario instanceof Administrador) {
             menuAdministrador((Administrador) usuario);
         } else if (usuario instanceof Recepcionista) {
             Recepcionista r = (Recepcionista) usuario;
