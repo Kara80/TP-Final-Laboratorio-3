@@ -2,6 +2,7 @@ package Menu;
 
 import Excepciones.FechaReservaInvalidaException;
 import Excepciones.HabitacionNoDisponibleException;
+import Excepciones.UsuarioDuplicadoException;
 import Modelo.*;
 
 import java.time.LocalDate;
@@ -103,7 +104,8 @@ public class Menu{
             System.out.println("1. Hacer check-in");
             System.out.println("2. Hacer check-out");
             System.out.println("3. Ver reservas");
-            System.out.println("4. Salir");
+            System.out.println("4. Agregar cliente");
+            System.out.println("5. Salir");
             System.out.print("Opción: ");
 
             String opcion = scanner.nextLine();
@@ -124,6 +126,9 @@ public class Menu{
                     hotel.getReservas().mostrar();
                     break;
                 case "4":
+                    agregarCliente();
+                    break;
+                case "5":
                     salir = true;
                     break;
                 default:
@@ -204,6 +209,44 @@ public class Menu{
         hotel.leerHabitaciones();
         hotel.leerReservas();
     }
+
+    private void agregarCliente(){
+
+        try{
+            System.out.println("--Registro de nuevo cliente--\n");
+            System.out.println("Ingrese el nombre del cliente: ");
+            String nombre = scanner.nextLine();
+
+            System.out.println("Ingrese el DNI del cliente:");
+            String dni = scanner.nextLine();
+
+            System.out.print("Ingrese la nacionalidad: ");
+            String nacionalidad = scanner.nextLine();
+
+            System.out.print("Ingrese el domicilio: ");
+            String domicilio = scanner.nextLine();
+
+            System.out.print("Ingrese el mail: ");
+            String mail = scanner.nextLine();
+
+            System.out.print("Ingrese la contraseña: ");
+            String contraseña = scanner.nextLine();
+
+            Cliente nuevoCliente = new Cliente(dni, nombre, nacionalidad, domicilio, contraseña, mail);
+
+            hotel.agregarCliente(nuevoCliente);
+            System.out.println("Cliente registrado con exito");
+        }
+        catch (UsuarioDuplicadoException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+
+
+
+    }
+
+
+
 }
 
 
