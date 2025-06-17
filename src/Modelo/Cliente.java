@@ -126,8 +126,8 @@ public class Cliente extends Usuario{
                 JSONArray jsonReservas = json.getJSONArray("reservas");
                 ArrayList<Reserva>reservaAux = new ArrayList<>();
                 for (int i = 0; i < jsonReservas.length(); i++){
-                    Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(i));
-                    //cliente.agregarReserva(r);
+                    Reserva r = Reserva.jsonAReservaSinCliente(jsonReservas.getJSONObject(i));
+                    r.setCliente(cliente);
                     reservaAux.add(r);
                 }
                 cliente.setReservas(reservaAux);
@@ -137,7 +137,8 @@ public class Cliente extends Usuario{
         }
         return cliente;
     }
-    /// no carga reserva a cliente
+
+    // no carga reserva a cliente
     public static Cliente jsonAClienteSinReserva(JSONObject json){
         Cliente cliente = new Cliente();
         cliente.cargarDesdeJson(json);  // ← carga comunes

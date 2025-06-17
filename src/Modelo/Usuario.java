@@ -126,11 +126,13 @@ public abstract class Usuario {
 
     @Override
     public String toString() {
-        return "Usuario{" +
-                "dni='" + dni + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", nacionalidad='" + nacionalidad + '\'' +
-                ", domicilio='" + domicilio + '\'' +
-                '}';
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Nombre: ").append(getNombre());
+        sb.append(" - Nacionalidad: ").append(getNacionalidad());
+        sb.append(" - DNI: ").append(getDni());
+        sb.append(" - Domicilio: ").append(getDomicilio());
+
+        return sb.toString();
     }
 }

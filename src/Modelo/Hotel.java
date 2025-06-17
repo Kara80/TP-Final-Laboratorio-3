@@ -5,6 +5,7 @@ import Excepciones.FechaReservaInvalidaException;
 import Excepciones.HabitacionNoDisponibleException;
 import Enum.EstadoDeHabitacion;
 import Excepciones.ReservaNoEncontradaException;
+import Excepciones.UsuarioDuplicadoException;
 import JSONUtiles.JsonUtiles;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,8 +31,6 @@ public class Hotel {
         this.reservas = new Gestor<>();
     }
 
-
-
     public Gestor<Habitacion> getHabitaciones() {
         return habitaciones;
     }
@@ -51,6 +50,71 @@ public class Hotel {
     public Gestor<Reserva> getReservas() {
         return reservas;
     }
+
+
+
+    public void agregarCliente(Cliente cliente) throws UsuarioDuplicadoException{
+        if (cliente == null ||
+            cliente.getDni() == null || cliente.getDni().isBlank() ||
+            cliente.getNombre() == null || cliente.getNombre().isBlank() ||
+            cliente.getContraseña() == null || cliente.getContraseña().isBlank() ||
+            cliente.getMail() == null || cliente.getMail().isBlank() ||
+            cliente.getDomicilio() == null || cliente.getDomicilio().isBlank() ||
+            cliente.getNacionalidad() == null || cliente.getNacionalidad().isBlank()){
+
+            verificarDatosUnicos(cliente);
+            clientes.agregar(cliente);
+
+        }
+    }
+
+    private void verificarDatosUnicos(Usuario nuevoUsuario) throws UsuarioDuplicadoException {
+        if (dniExiste(nuevoUsuario.getDni())) {
+            throw new UsuarioDuplicadoException("El DNI ya está registrado.");
+        }
+        if (mailExiste(nuevoUsuario.getMail())) {
+            throw new UsuarioDuplicadoException("El mail ya está registrado.");
+        }
+        if (contrasenaExiste(nuevoUsuario.getContraseña())) {
+            throw new UsuarioDuplicadoException("La contraseña ya está registrada.");
+        }
+    }
+
+    private List<Usuario> obtenerTodosLosUsuarios() {
+        List<Usuario> todos = new ArrayList<>();
+        todos.addAll(clientes.getElementos());
+        todos.addAll(recepcionistas.getElementos());
+        todos.addAll(administradores.getElementos());
+        return todos;
+    }
+
+    private boolean dniExiste(String dni) {
+        for (Usuario u : obtenerTodosLosUsuarios()) {
+            if (u.getDni().equals(dni)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean mailExiste(String mail) {
+        for (Usuario u : obtenerTodosLosUsuarios()) {
+            if (u.getMail().equals(mail)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean contrasenaExiste(String contrasena) {
+        for (Usuario u : obtenerTodosLosUsuarios()) {
+            if (u.getContraseña().equals(contrasena)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /*
         Recorre la lista de habitaciones y devuelve una lista con

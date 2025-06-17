@@ -164,12 +164,11 @@ public class Habitacion {
             EstadoDeHabitacion estado = EstadoDeHabitacion.valueOf(json.getString("estadoHbitacion"));
             habitacion.setEstadoHabitacion(estado);
 
-
-            //habitacion.getReservas().clear();
             JSONArray jsonReservas = json.getJSONArray("reservas");
             ArrayList<Reserva>reservasAux = new ArrayList<>();
             for (int i = 0 ; i< jsonReservas.length(); i++){
-                Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(i));
+                Reserva r = Reserva.jsonAReservaSinHabitacion(jsonReservas.getJSONObject(i));
+                r.setHabitacion(habitacion);
                 reservasAux.add(r);
             }
             habitacion.setReservas(reservasAux);
@@ -193,7 +192,6 @@ public class Habitacion {
             habitacion.setEstadoHabitacion(estado);
 
             // No cargamos reservas para evitar bucle
-            //habitacion.getReservas().clear();
 
         } catch (JSONException e){
             e.printStackTrace();
@@ -215,8 +213,30 @@ public class Habitacion {
         return Objects.hashCode(numero);
     }
 
+    //Muestra habitacion sin entrar en bucle con reserva
     @Override
     public String toString() {
-        return "Habitación Nº " + getNumero() + " - Capacidad: " + getCapacidad()+ "Estado Actual: "+getEstadoHabitacion() + " Reserva: "+reservas;
+        StringBuilder sb = new StringBuilder();
+        sb.append("----------------------------------------------------\n");
+
+        sb.append("Habitacion N°: ").append(getNumero()).
+                append(" - Capacidad: ").append(getCapacidad()).
+                append("- Estado actual: ").append(getEstadoHabitacion());
+
+        if (reservas != null && !reservas.isEmpty()){
+            sb.append("\nReservas: ");
+
+            for (Reserva r : reservas){
+                sb.append("- Ocupada por DNI:" ).append(r.getCliente().getDni())
+                        .append(" desde ").append(r.getFechaInicio()).append(" hasta ").append(r.getFechaFin());
+            }
+        }
+        else{
+            sb.append("\nSin reservas.");
+        }
+        sb.append("\n----------------------------------------------------");
+
+
+        return sb.toString();
     }
 }

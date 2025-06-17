@@ -10,6 +10,10 @@ public class Gestor <T> {
         this.elementos = new ArrayList<>();
     }
 
+    public List<T> getElementos() {
+        return elementos;
+    }
+
     public void agregar(T elemento){
         elementos.add(elemento);
     }

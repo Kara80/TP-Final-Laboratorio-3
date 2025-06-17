@@ -180,7 +180,7 @@ public class Reserva {
             Habitacion habitacion = Habitacion.jsonAHabitacionSinReserva(jsonHabitacion);
             reserva.setHabitacion(habitacion);
 
-            //reserva.setCliente(null);
+            //Cliente
             JSONObject jsonCliente = json.getJSONObject("cliente");
             Cliente clientito = Cliente.jsonAClienteSinReserva(jsonCliente);
             reserva.setCliente(clientito);
@@ -191,15 +191,74 @@ public class Reserva {
         return reserva;
     }
 
+    public static Reserva jsonAReservaSinCliente(JSONObject json){
+        Reserva reserva = new Reserva();
+
+        try{
+            // Estado de reserva (como string)
+            EstadoDeReserva estado = EstadoDeReserva.valueOf(json.getString("estadoReserva"));
+            reserva.setEstadoDeReserva(estado);
+
+            // Fechas
+            reserva.setFechaInicio(LocalDate.parse(json.getString("fechaInicio")));
+            reserva.setFechaFin(LocalDate.parse(json.getString("fechaFin")));
+
+            // Habitacion
+            JSONObject jsonHabitacion = json.getJSONObject("habitacion");
+            Habitacion habitacion = Habitacion.jsonAHabitacionSinReserva(jsonHabitacion);
+            reserva.setHabitacion(habitacion);
+
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return reserva;
+    }
+
+
+    public static Reserva jsonAReservaSinHabitacion(JSONObject json){
+        Reserva reserva = new Reserva();
+
+        try{
+            // Estado de reserva (como string)
+            EstadoDeReserva estado = EstadoDeReserva.valueOf(json.getString("estadoReserva"));
+            reserva.setEstadoDeReserva(estado);
+
+            // Fechas
+            reserva.setFechaInicio(LocalDate.parse(json.getString("fechaInicio")));
+            reserva.setFechaFin(LocalDate.parse(json.getString("fechaFin")));
+
+
+            // Cliente
+            JSONObject jsonCliente = json.getJSONObject("cliente");
+            Cliente clientito = Cliente.jsonAClienteSinReserva(jsonCliente);
+            reserva.setCliente(clientito);
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
+        return reserva;
+    }
+
+
+
     @Override
     public String toString() {
-        return "Reserva{" +
-                "estadoDeReserva=" + estadoDeReserva +
-                ", habitacion=" + habitacion +
-                ", cliente=" + cliente +
-                ", fechaInicio=" + fechaInicio +
-                ", fechaFin=" + fechaFin +
-                '}';
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Estado de Reserva: ").append(getEstadoDeReserva()).
+                append(" - Fechas: desde ").append(getFechaInicio()).
+                append(" a ").append(getFechaFin());
+        sb.append(" - DNI del cliente: ").append(getCliente().getDni());
+        sb.append(" - Habitacion N°: ").append(getHabitacion().getNumero());
+
+
+        return sb.toString();
     }
 
 }
