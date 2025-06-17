@@ -127,6 +127,7 @@ public class Menu{
                     break;
                 case "4":
                     agregarCliente();
+                    hotel.grabarClientes();
                     break;
                 case "5":
                     salir = true;
