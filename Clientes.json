@@ -55,5 +55,15 @@
         "dni": "45645632",
         "nacionalidad": "argentina",
         "contraseña": "mdp"
+    },
+    {
+        "tipo": "cliente",
+        "domicilio": "alberti",
+        "mail": "pepe@gmail.com",
+        "reservas": [],
+        "nombre": "pepe",
+        "dni": "43786700",
+        "nacionalidad": "argentina",
+        "contraseña": "peppers"
     }
 ]

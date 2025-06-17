@@ -11,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,10 +61,12 @@ public class Hotel {
             cliente.getDomicilio() == null || cliente.getDomicilio().isBlank() ||
             cliente.getNacionalidad() == null || cliente.getNacionalidad().isBlank()){
 
-            verificarDatosUnicos(cliente);
-            clientes.agregar(cliente);
-
+            throw new IllegalArgumentException("El cliente tiene datos incompletos o nulos");
         }
+
+        verificarDatosUnicos(cliente);
+        clientes.agregar(cliente);
+
     }
 
     private void verificarDatosUnicos(Usuario nuevoUsuario) throws UsuarioDuplicadoException {
