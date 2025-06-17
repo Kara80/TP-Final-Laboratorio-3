@@ -217,11 +217,11 @@ public class Habitacion {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("----------------------------------------------------\n");
+        sb.append("----------------------------------------------------------------------------------\n");
 
         sb.append("Habitacion N°: ").append(getNumero()).
                 append(" - Capacidad: ").append(getCapacidad()).
-                append("- Estado actual: ").append(getEstadoHabitacion());
+                append(" - Estado actual: ").append(getEstadoHabitacion());
 
         if (reservas != null && !reservas.isEmpty()){
             sb.append("\nReservas: ");
@@ -234,7 +234,7 @@ public class Habitacion {
         else{
             sb.append("\nSin reservas.");
         }
-        sb.append("\n----------------------------------------------------");
+        sb.append("\n----------------------------------------------------------------------------------\n");
 
 
         return sb.toString();

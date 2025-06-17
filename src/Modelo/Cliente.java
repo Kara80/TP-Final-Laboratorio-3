@@ -148,6 +148,30 @@ public class Cliente extends Usuario{
 
     @Override
     public String toString() {
-        return "Cliente: " + getNombre() + " - DNI: " + getDni() + " - mail: "+getMail();
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("----------------------------------------------------------------------------------\n");
+
+        sb.append("Nombre: ").append(getNombre());
+        sb.append(" - DNI: ").append(getDni());
+        sb.append(" - Nacionalidad: ").append(getNacionalidad());
+        sb.append(" - Domicilio: ").append(getDomicilio());
+        sb.append(" - Mail: ").append(getMail());
+        if (reservas != null && !reservas.isEmpty()){
+            sb.append("\nReservas: ");
+            for (Reserva r : reservas){
+
+                sb.append("Habitacion N°: ").append(r.getHabitacion().getNumero());
+                sb.append(" - Desde ").append(r.getFechaInicio()).append(" hasta ").append(r.getFechaFin());
+            }
+        }
+        else{
+            sb.append("\nSin reservas.");
+        }
+        sb.append("\n----------------------------------------------------------------------------------\n");
+
+
+        return sb.toString();
+
     }
 }
