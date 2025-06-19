@@ -116,6 +116,21 @@ public class Hotel {
         return false;
     }
 
+    public Habitacion buscarHabitacionPorNumero(int numero){
+
+        for (Habitacion h : habitaciones.obtenerTodos()){
+
+            if (h.getNumero() == numero){
+                return h;
+            }
+        }
+
+        return null;
+
+    }
+
+
+
 
     /*
         Recorre la lista de habitaciones y devuelve una lista con

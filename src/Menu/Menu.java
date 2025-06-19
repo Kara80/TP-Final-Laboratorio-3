@@ -3,9 +3,14 @@ package Menu;
 import Excepciones.FechaReservaInvalidaException;
 import Excepciones.HabitacionNoDisponibleException;
 import Excepciones.UsuarioDuplicadoException;
+import JSONUtiles.JsonUtiles;
 import Modelo.*;
+import Enum.EstadoDeReserva;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -105,7 +110,10 @@ public class Menu{
             System.out.println("2. Hacer check-out");
             System.out.println("3. Ver reservas");
             System.out.println("4. Agregar cliente");
-            System.out.println("5. Salir");
+            System.out.println("5. Agregar reserva");
+            System.out.println("6. Ver clientes");
+            System.out.println("7. Ver Habitaciones");
+            System.out.println("8. Salir");
             System.out.print("Opción: ");
 
             String opcion = scanner.nextLine();
@@ -128,8 +136,21 @@ public class Menu{
                 case "4":
                     agregarCliente();
                     hotel.grabarClientes();
+
                     break;
                 case "5":
+                    agregarReserva();
+                    hotel.grabarReservas();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarClientes();
+                    break;
+                case "6":
+                    hotel.getClientes().mostrar();
+                    break;
+                case "7":
+                    hotel.getHabitaciones().mostrar();
+                    break;
+                case "8":
                     salir = true;
                     break;
                 default:
@@ -241,10 +262,61 @@ public class Menu{
         catch (UsuarioDuplicadoException e){
             System.out.println("Error: " + e.getMessage());
         }
+    }
 
+    private void agregarReserva(){
+
+        try{
+            System.out.println(" ----- Crear nueva Reserva ----- ");
+
+            Cliente cliente = seleccionarCliente();
+            if (cliente == null) return;
+
+            System.out.println("Ingrese el numero de la habitacion: ");
+            String numString = scanner.nextLine();
+            int numeroHabitacion = 0;
+                try{
+                    numeroHabitacion = Integer.parseInt(numString);
+                } catch (NumberFormatException e) {
+                    System.out.println("El numero ingresado no es valido");
+                    return;
+                }
+
+            Habitacion habitacion = hotel.buscarHabitacionPorNumero(numeroHabitacion);
+            if (habitacion == null){
+                System.out.println("No se encontro una habitacion con el numero: " + numeroHabitacion);
+                return;
+            }
+
+            LocalDate inicio = null;
+            LocalDate fin = null;
+            try{
+                System.out.print("Ingrese fecha de inicio (YYYY-MM-DD): ");
+                inicio = LocalDate.parse(scanner.nextLine());
+
+                System.out.print("Ingrese fecha de fin (YYYY-MM-DD): ");
+                fin = LocalDate.parse(scanner.nextLine());
+            } catch (Exception e){
+                System.out.println("Error: formato de reserva invalido");
+                return;
+            }
+
+            Reserva reserva  = new Reserva(habitacion, cliente, inicio, fin);
+
+            //arroja la excepcion
+            hotel.agregarReserva(reserva);
+            System.out.println("Reserva agregada con exito");
+
+        } catch (FechaReservaInvalidaException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        catch (HabitacionNoDisponibleException e){
+            System.out.println("Error: " + e.getMessage());
+        }
 
 
     }
+
 
 
 

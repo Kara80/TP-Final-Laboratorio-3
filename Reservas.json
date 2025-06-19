@@ -55,5 +55,24 @@
             "estadoHbitacion": "disponible",
             "capacidad": 4
         }
+    },
+    {
+        "cliente": {
+            "tipo": "cliente",
+            "domicilio": "alberti",
+            "mail": "pepe@gmail.com",
+            "nombre": "pepe",
+            "dni": "43786700",
+            "nacionalidad": "argentina",
+            "contraseña": "peppers"
+        },
+        "fechaInicio": "2025-06-26",
+        "estadoReserva": "reservada",
+        "fechaFin": "2025-07-02",
+        "habitacion": {
+            "numero": 1,
+            "estadoHbitacion": "disponible",
+            "capacidad": 2
+        }
     }
 ]

@@ -167,8 +167,11 @@ public class Habitacion {
             JSONArray jsonReservas = json.getJSONArray("reservas");
             ArrayList<Reserva>reservasAux = new ArrayList<>();
             for (int i = 0 ; i< jsonReservas.length(); i++){
+
                 Reserva r = Reserva.jsonAReservaSinHabitacion(jsonReservas.getJSONObject(i));
+
                 r.setHabitacion(habitacion);
+
                 reservasAux.add(r);
             }
             habitacion.setReservas(reservasAux);
@@ -224,11 +227,12 @@ public class Habitacion {
                 append(" - Estado actual: ").append(getEstadoHabitacion());
 
         if (reservas != null && !reservas.isEmpty()){
-            sb.append("\nReservas: ");
+            sb.append("\nReservas:\n");
 
             for (Reserva r : reservas){
                 sb.append("- Ocupada por DNI:" ).append(r.getCliente().getDni())
                         .append(" desde ").append(r.getFechaInicio()).append(" hasta ").append(r.getFechaFin());
+                sb.append("\n");
             }
         }
         else{
