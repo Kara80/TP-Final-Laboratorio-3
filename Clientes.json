@@ -60,7 +60,16 @@
         "tipo": "cliente",
         "domicilio": "alberti",
         "mail": "pepe@gmail.com",
-        "reservas": [],
+        "reservas": [{
+            "fechaInicio": "2025-06-26",
+            "estadoReserva": "reservada",
+            "fechaFin": "2025-07-02",
+            "habitacion": {
+                "numero": 1,
+                "estadoHbitacion": "disponible",
+                "capacidad": 2
+            }
+        }],
         "nombre": "pepe",
         "dni": "43786700",
         "nacionalidad": "argentina",
