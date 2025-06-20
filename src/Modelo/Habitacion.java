@@ -60,6 +60,7 @@ public class Habitacion {
 
     /*
     Verifica si entre las fechas pasadas por parametro hay alguna reserva ya hecha para esta habitacion.
+    Se usa para recorrer lista de habitaciones y verificar cuales estan disponibles.
      */
     public boolean estaDisponible(LocalDate fechaInicio, LocalDate fechaFinal){
 
@@ -94,10 +95,13 @@ public class Habitacion {
         }
 
         //si la habitacion esta reservada entre esas fechas se arroja la excepcion y se avisa
-        if (!estaDisponible(nuevaReserva.getFechaInicio(), nuevaReserva.getFechaFin())){
-            throw new HabitacionNoDisponibleException("La habitacion se encuentra reservada entre las fechas " +
-                        nuevaReserva.getFechaInicio() + " y " + nuevaReserva.getFechaFin() + " ." , nuevaReserva.getHabitacion().getNumero());
-        }
+        //las fechas de esa reserva ya hecha
+            for (Reserva r : reservas){
+                if (r.chocaConFechas(nuevaReserva.getFechaInicio(), nuevaReserva.getFechaFin())){
+                    throw new HabitacionNoDisponibleException("La habitacion se encuentra entre las fechas "
+                            + r.getFechaInicio() + " hasta " + r.getFechaFin() + " ." , this.getNumero());
+                }
+            }
 
         //si no se entro a ningun if se puede agregar una nueva reserva a la Habitacion
         reservas.add(nuevaReserva);
