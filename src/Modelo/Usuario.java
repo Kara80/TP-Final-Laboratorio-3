@@ -1,11 +1,12 @@
 package Modelo;
 
+import Interface.Identificable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
 
-public abstract class Usuario {
+public abstract class Usuario implements Identificable {
     private String dni;
     private String nombre;
     private String nacionalidad;
@@ -124,14 +125,17 @@ public abstract class Usuario {
         return Objects.hash(dni, nacionalidad, contraseña, mail);
     }
 
+
     @Override
-    public String toString() {
+    public String obtenerIdentificador() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Nombre: ").append(getNombre());
         sb.append(" - Nacionalidad: ").append(getNacionalidad());
         sb.append(" - DNI: ").append(getDni());
         sb.append(" - Domicilio: ").append(getDomicilio());
+        sb.append(" - Mail: ").append(getMail());
+
 
         return sb.toString();
     }

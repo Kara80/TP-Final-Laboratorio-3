@@ -1,5 +1,7 @@
 package Contenedores;
 
+import Interface.Identificable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +24,19 @@ public class Gestor <T> {
         elementos.remove(elemento);
     }
 
-    public void mostrar(){
-        for (T elemento : elementos){
-            System.out.println(elemento + " ");
-        }
-        System.out.println();
+    public String mostrar(){
+        StringBuilder sb = new StringBuilder();
+
+       for (T elemento : elementos){
+           if (elemento instanceof Identificable){
+               sb.append(((Identificable) elemento).obtenerIdentificador()).append("\n");
+           }
+           else{
+               sb.append(elemento.toString()).append("\n");
+           }
+       }
+
+        return sb.toString();
     }
 
     public List<T> obtenerTodos(){

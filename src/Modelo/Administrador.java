@@ -19,10 +19,8 @@ public class Administrador extends Usuario{
         JSONObject jsonAdmin = new JSONObject();
 
         try{
-
             jsonAdmin = usuarioAJson();
             jsonAdmin.put("tipo", "administrador");
-
         }
         catch (JSONException e){
             e.printStackTrace();
@@ -38,5 +36,14 @@ public class Administrador extends Usuario{
         return admin;
     }
 
+    @Override
+    public String obtenerIdentificador() {
+        StringBuilder sb = new StringBuilder();
 
+        sb.append("----------------------------------------------------------------------------------\n");
+        sb.append(super.obtenerIdentificador());
+        sb.append("\n----------------------------------------------------------------------------------");
+
+        return sb.toString();
+    }
 }
