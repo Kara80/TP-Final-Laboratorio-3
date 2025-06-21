@@ -52,20 +52,22 @@ public class Hotel {
 
 
 
-    public void agregarCliente(Cliente cliente) throws UsuarioDuplicadoException{
-        if (cliente == null ||
-            cliente.getDni() == null || cliente.getDni().isBlank() ||
-            cliente.getNombre() == null || cliente.getNombre().isBlank() ||
-            cliente.getContraseña() == null || cliente.getContraseña().isBlank() ||
-            cliente.getMail() == null || cliente.getMail().isBlank() ||
-            cliente.getDomicilio() == null || cliente.getDomicilio().isBlank() ||
-            cliente.getNacionalidad() == null || cliente.getNacionalidad().isBlank()){
+    public void agregarUsuario(Usuario usuario) throws UsuarioDuplicadoException{
+        if (usuario == null ||
+            usuario.getDni() == null || usuario.getDni().isBlank() ||
+            usuario.getNombre() == null || usuario.getNombre().isBlank() ||
+            usuario.getContraseña() == null || usuario.getContraseña().isBlank() ||
+            usuario.getMail() == null || usuario.getMail().isBlank() ||
+            usuario.getDomicilio() == null || usuario.getDomicilio().isBlank() ||
+            usuario.getNacionalidad() == null || usuario.getNacionalidad().isBlank()){
 
-            throw new IllegalArgumentException("El cliente tiene datos incompletos o nulos");
+            throw new IllegalArgumentException("El usuario tiene datos incompletos o nulos");
         }
 
-        verificarDatosUnicos(cliente);
-        clientes.agregar(cliente);
+        verificarDatosUnicos(usuario);
+        if (usuario instanceof Cliente) clientes.agregar((Cliente) usuario);
+        if (usuario instanceof Administrador) administradores.agregar((Administrador) usuario);
+        if (usuario instanceof Recepcionista) recepcionistas.agregar((Recepcionista) usuario);
 
     }
 

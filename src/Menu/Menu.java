@@ -25,6 +25,7 @@ public class Menu{
 
     public void mostrarMenu(){
         cargarDatos();
+        
         System.out.println("===== Bienvenido al sistema del Hotel =====");
 
         Usuario usuario = null;
@@ -86,7 +87,9 @@ public class Menu{
             System.out.println("1. Ver habitaciones");
             System.out.println("2. Ver clientes");
             System.out.println("3. Ver recepcionistas");
-            System.out.println("4. Salir");
+            System.out.println("4. Agregar administradores");
+            System.out.println("5. Agregar Recepcionistas");
+            System.out.println("6. Salir");
             System.out.print("Opción: ");
 
             String opcion = scanner.nextLine();
@@ -101,6 +104,14 @@ public class Menu{
                     System.out.println(hotel.getRecepcionistas().mostrar());
                     break;
                 case "4":
+                    agregarAdmin();
+                    hotel.grabarAdministradores();
+                    break;
+                case "5":
+                    agregarRecepcionista();
+                    hotel.grabarRecepcionistas();
+                    break;
+                case "6":
                     salir = true;
                     break;
                 default:
@@ -264,8 +275,72 @@ public class Menu{
 
             Cliente nuevoCliente = new Cliente(dni, nombre, nacionalidad, domicilio, contraseña, mail);
 
-            hotel.agregarCliente(nuevoCliente);
+            hotel.agregarUsuario(nuevoCliente);
             System.out.println("Cliente registrado con exito");
+        }
+        catch (UsuarioDuplicadoException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void agregarAdmin(){
+
+        try{
+            System.out.println("--Registro de nuevo admin--\n");
+            System.out.println("Ingrese el nombre del admin: ");
+            String nombre = scanner.nextLine();
+
+            System.out.println("Ingrese el DNI del admin:");
+            String dni = scanner.nextLine();
+
+            System.out.print("Ingrese la nacionalidad: ");
+            String nacionalidad = scanner.nextLine();
+
+            System.out.print("Ingrese el domicilio: ");
+            String domicilio = scanner.nextLine();
+
+            System.out.print("Ingrese el mail: ");
+            String mail = scanner.nextLine();
+
+            System.out.print("Ingrese la contraseña: ");
+            String contraseña = scanner.nextLine();
+
+            Administrador nuevoAdmin = new Administrador(dni, nombre, nacionalidad, domicilio, contraseña, mail);
+
+            hotel.agregarUsuario(nuevoAdmin);
+            System.out.println("Administrador registrado con exito");
+        }
+        catch (UsuarioDuplicadoException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void agregarRecepcionista(){
+
+        try{
+            System.out.println("--Registro de nuevo recepcionista--\n");
+            System.out.println("Ingrese el nombre del recepcionista: ");
+            String nombre = scanner.nextLine();
+
+            System.out.println("Ingrese el DNI del recepcionista:");
+            String dni = scanner.nextLine();
+
+            System.out.print("Ingrese la nacionalidad: ");
+            String nacionalidad = scanner.nextLine();
+
+            System.out.print("Ingrese el domicilio: ");
+            String domicilio = scanner.nextLine();
+
+            System.out.print("Ingrese el mail: ");
+            String mail = scanner.nextLine();
+
+            System.out.print("Ingrese la contraseña: ");
+            String contraseña = scanner.nextLine();
+
+            Recepcionista nuevoRecepcionista = new Recepcionista(dni, nombre, nacionalidad, domicilio, hotel, contraseña, mail);
+
+            hotel.agregarUsuario(nuevoRecepcionista);
+            System.out.println("Recepcionista registrado con exito");
         }
         catch (UsuarioDuplicadoException e){
             System.out.println("Error: " + e.getMessage());
