@@ -80,5 +80,14 @@ public class Recepcionista extends Usuario{
         return recep;
     }
 
+    @Override
+    public String obtenerIdentificador() {
+        StringBuilder sb = new StringBuilder();
 
+        sb.append("----------------------------------------------------------------------------------\n");
+        sb.append(super.obtenerIdentificador());
+        sb.append("\n----------------------------------------------------------------------------------");
+
+        return sb.toString();
+    }
 }

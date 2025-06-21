@@ -26,14 +26,23 @@ public class Menu{
     public void mostrarMenu(){
         cargarDatos();
         System.out.println("===== Bienvenido al sistema del Hotel =====");
-        System.out.print("Ingrese su mail: ");
-        String mail = scanner.nextLine();
 
-        System.out.print("Ingrese su contraseña: ");
-        String contrasenia = scanner.nextLine();
+        Usuario usuario = null;
 
-        // Buscar usuario
-        Usuario usuario = buscarUsuario(mail, contrasenia);
+        while (usuario == null){
+            System.out.print("Ingrese su mail: ");
+            String mail = scanner.nextLine();
+
+            System.out.print("Ingrese su contraseña: ");
+            String contrasenia = scanner.nextLine();
+
+            // Buscar usuario
+            usuario = buscarUsuario(mail, contrasenia);
+
+            if (usuario == null ){
+                System.out.println("Mail o contraseña incorrectos. Intente de nuevo.\n");
+            }
+        }
 
         if (usuario instanceof Administrador) {
             menuAdministrador((Administrador) usuario);
@@ -83,13 +92,13 @@ public class Menu{
             String opcion = scanner.nextLine();
             switch (opcion) {
                 case "1":
-                    hotel.getHabitaciones().mostrar();
+                    System.out.println(hotel.getHabitaciones().mostrar());
                     break;
                 case "2":
-                    hotel.getClientes().mostrar();
+                    System.out.println(hotel.getClientes().mostrar());
                     break;
                 case "3":
-                    hotel.getRecepcionistas().mostrar();
+                    System.out.println(hotel.getRecepcionistas().mostrar());
                     break;
                 case "4":
                     salir = true;
@@ -131,12 +140,11 @@ public class Menu{
                     }
                     break;
                 case "3":
-                    hotel.getReservas().mostrar();
+                    System.out.println(hotel.getReservas().mostrar());
                     break;
                 case "4":
                     agregarCliente();
                     hotel.grabarClientes();
-
                     break;
                 case "5":
                     agregarReserva();
@@ -145,10 +153,10 @@ public class Menu{
                     hotel.grabarClientes();
                     break;
                 case "6":
-                    hotel.getClientes().mostrar();
+                    System.out.println(hotel.getClientes().mostrar());
                     break;
                 case "7":
-                    hotel.getHabitaciones().mostrar();
+                    System.out.println(hotel.getHabitaciones().mostrar());
                     break;
                 case "8":
                     salir = true;

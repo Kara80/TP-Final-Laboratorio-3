@@ -124,13 +124,8 @@ public class Hotel {
                 return h;
             }
         }
-
         return null;
-
     }
-
-
-
 
     /*
         Recorre la lista de habitaciones y devuelve una lista con
