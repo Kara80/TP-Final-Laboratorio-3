@@ -1,11 +1,8 @@
 package Modelo;
 
 import Contenedores.Gestor;
-import Excepciones.FechaReservaInvalidaException;
-import Excepciones.HabitacionNoDisponibleException;
+import Excepciones.*;
 import Enum.EstadoDeHabitacion;
-import Excepciones.ReservaNoEncontradaException;
-import Excepciones.UsuarioDuplicadoException;
 import JSONUtiles.JsonUtiles;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -128,6 +125,57 @@ public class Hotel {
         }
         return null;
     }
+
+    public void eliminarReserva(String dniCliente, int numeroHabitacion, LocalDate fechaInicio, LocalDate fechaFin) throws ReservaNoEncontradaException, ClienteNoEncontradoException {
+
+        if (dniCliente == null || dniCliente.isBlank() ||
+            fechaInicio == null || fechaFin == null){
+            throw new IllegalArgumentException("Datos invalidos para eliminar una reserva.");
+        }
+
+        Cliente cliente = new Cliente();
+        for (Cliente c : clientes.obtenerTodos()){
+            if (c.getDni().equals(dniCliente)){
+                cliente = c;
+                break;
+            }
+        }
+
+        if (cliente == null){
+            throw new ClienteNoEncontradoException("No se encontro un cliente con el dni " + cliente.getDni());
+        }
+
+        Reserva reservaAEliminar = new Reserva();
+
+        for (Reserva r : reservas.obtenerTodos()){
+            if (r.getCliente().equals(cliente) &&
+                r.getHabitacion().getNumero() == numeroHabitacion &&
+                r.getFechaInicio().isEqual(fechaInicio) &&
+                r.getFechaFin().isEqual(fechaFin)){
+                reservaAEliminar = r;
+                break;
+            }
+        }
+
+        if (reservaAEliminar == null){
+            throw new ReservaNoEncontradaException("No se encontro una reserva que coincida con los datos pasados", cliente, fechaInicio);
+        }
+
+        //eliminar de la lista del cliente, lista de la habitacion y de la lista del hotel
+
+
+        //cliente.eliminarReserva(reservaAEliminar);
+        reservaAEliminar.getCliente().eliminarReserva(reservaAEliminar);
+
+
+        Habitacion habitacionDeReserva = reservaAEliminar.getHabitacion();
+        habitacionDeReserva.eliminarReserva(reservaAEliminar);
+
+
+        reservas.eliminar(reservaAEliminar);
+
+    }
+
 
     /*
         Recorre la lista de habitaciones y devuelve una lista con

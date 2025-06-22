@@ -108,6 +108,12 @@ public class Habitacion {
 
     }
 
+    public void eliminarReserva(Reserva reserva){
+        if (reserva != null){
+            this.reservas.remove(reserva);
+        }
+    }
+
     //----------------------- JAVA A JSON -----------------------//
     //sin lista de reservas para evitar bucle en Reserva
     public JSONObject habitacionAJson(){
