@@ -1,8 +1,6 @@
 package Menu;
 
-import Excepciones.FechaReservaInvalidaException;
-import Excepciones.HabitacionNoDisponibleException;
-import Excepciones.UsuarioDuplicadoException;
+import Excepciones.*;
 import JSONUtiles.JsonUtiles;
 import Modelo.*;
 import Enum.EstadoDeReserva;
@@ -133,7 +131,8 @@ public class Menu{
             System.out.println("5. Agregar reserva");
             System.out.println("6. Ver clientes");
             System.out.println("7. Ver Habitaciones");
-            System.out.println("8. Salir");
+            System.out.println("8. Eliminar Reserva");
+            System.out.println("9. Salir");
             System.out.print("Opción: ");
 
             String opcion = scanner.nextLine();
@@ -170,6 +169,12 @@ public class Menu{
                     System.out.println(hotel.getHabitaciones().mostrar());
                     break;
                 case "8":
+                    eliminarReserva();
+                    hotel.grabarReservas();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarClientes();
+                    break;
+                case "9":
                     salir = true;
                     break;
                 default:
@@ -397,6 +402,50 @@ public class Menu{
             System.out.println("Error: " + e.getMessage());
         }
 
+
+    }
+
+    public void eliminarReserva(){
+
+        try{
+            System.out.println(" --- Eliminar Una Reserva --- ");
+
+            Cliente cliente = seleccionarCliente();
+            String dni = cliente.getDni();
+            if (cliente == null) return;
+
+            System.out.println("Ingrese el numero de la habitacion: ");
+            String numString = scanner.nextLine();
+            int numeroHabitacion = 0;
+            try{
+                numeroHabitacion = Integer.parseInt(numString);
+            } catch (NumberFormatException e) {
+                System.out.println("El numero ingresado no es valido");
+                return;
+            }
+
+            LocalDate fechaInicio = null;
+            LocalDate fechaFin = null;
+            try{
+                 System.out.println("Ingrese fecha de inicio (YYYY-MM-DD):");
+                 fechaInicio = LocalDate.parse(scanner.nextLine());
+
+                 System.out.print("Ingrese fecha de fin (YYYY-MM-DD): ");
+                 fechaFin = LocalDate.parse(scanner.nextLine());
+            } catch (Exception e) {
+                System.out.println("Error: formato de reserva invalido");
+                return;
+            }
+
+            hotel.eliminarReserva(dni, numeroHabitacion, fechaInicio, fechaFin);
+            System.out.println("Reserva eliminada con exito");
+
+        }catch (ClienteNoEncontradoException | ReservaNoEncontradaException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+        catch (Exception e){
+            System.out.println("Error inesperado: " + e.getMessage());
+        }
 
     }
 

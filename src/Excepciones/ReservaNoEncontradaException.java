@@ -18,6 +18,6 @@ public class ReservaNoEncontradaException extends Exception {
     @Override
     public String getMessage() {
         return super.getMessage() + " - Cliente: " + cliente.getNombre() + ", Dni: " + cliente.getDni() +
-                " - fecha de hoy: " + fechaHoy;
+                " - fecha buscada: " + fechaHoy;
     }
 }

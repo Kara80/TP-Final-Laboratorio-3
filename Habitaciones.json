@@ -1,36 +1,20 @@
 [
     {
         "numero": 1,
-        "reservas": [
-            {
-                "cliente": {
-                    "tipo": "cliente",
-                    "domicilio": "racedo",
-                    "mail": "juan@gmai.",
-                    "nombre": "Juan Pérez",
-                    "dni": "12345678",
-                    "nacionalidad": "argentina",
-                    "contraseña": "mdp"
-                },
-                "fechaInicio": "2025-06-13",
-                "estadoReserva": "reservada",
-                "fechaFin": "2025-06-25"
+        "reservas": [{
+            "cliente": {
+                "tipo": "cliente",
+                "domicilio": "racedo",
+                "mail": "juan@gmai.",
+                "nombre": "Juan Pérez",
+                "dni": "12345678",
+                "nacionalidad": "argentina",
+                "contraseña": "mdp"
             },
-            {
-                "cliente": {
-                    "tipo": "cliente",
-                    "domicilio": "alberti",
-                    "mail": "pepe@gmail.com",
-                    "nombre": "pepe",
-                    "dni": "43786700",
-                    "nacionalidad": "argentina",
-                    "contraseña": "peppers"
-                },
-                "fechaInicio": "2025-06-26",
-                "estadoReserva": "reservada",
-                "fechaFin": "2025-07-02"
-            }
-        ],
+            "fechaInicio": "2025-06-13",
+            "estadoReserva": "reservada",
+            "fechaFin": "2025-06-25"
+        }],
         "estadoHbitacion": "disponible",
         "capacidad": 2
     },
