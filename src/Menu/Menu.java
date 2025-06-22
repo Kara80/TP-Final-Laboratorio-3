@@ -1,223 +1,464 @@
 package Menu;
 
-import Excepciones.FechaReservaInvalidaException;
-import Excepciones.HabitacionNoDisponibleException;
+import Excepciones.*;
+import JSONUtiles.JsonUtiles;
 import Modelo.*;
+import Enum.EstadoDeReserva;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
-public class Menu {
+public class Menu{
     private Hotel hotel;
     private Scanner scanner;
 
-
-    public Menu(Hotel hotel) {
-        this.hotel = hotel;
+    public Menu(){
+        this.hotel = new Hotel();
         this.scanner = new Scanner(System.in);
     }
 
-    public Menu() {
+    public void mostrarMenu(){
+        cargarDatos();
+        
+        System.out.println("===== Bienvenido al sistema del Hotel =====");
+
+        Usuario usuario = null;
+
+        while (usuario == null){
+            System.out.print("Ingrese su mail: ");
+            String mail = scanner.nextLine();
+
+            System.out.print("Ingrese su contraseña: ");
+            String contrasenia = scanner.nextLine();
+
+            // Buscar usuario
+            usuario = buscarUsuario(mail, contrasenia);
+
+            if (usuario == null ){
+                System.out.println("Mail o contraseña incorrectos. Intente de nuevo.\n");
+            }
+        }
+
+        if (usuario instanceof Administrador) {
+            menuAdministrador((Administrador) usuario);
+        } else if (usuario instanceof Recepcionista) {
+            Recepcionista r = (Recepcionista) usuario;
+            r.setHotel(hotel); // vincular el hotel
+            menuRecepcionista(r);
+        } else if (usuario instanceof Cliente) {
+            menuCliente((Cliente) usuario);
+        }
     }
 
-    public void mostrarMenu() {
-        int opcion = -1;
-        if(scanner == null){
-            scanner = new Scanner(System.in);
-        }
-
-        if(hotel == null){
-            hotel = new Hotel();
-        }
-
-        do {
-            System.out.println("\n========= MENÚ PRINCIPAL =========");
-            System.out.println("1. Listar habitaciones disponibles");
-            System.out.println("2. Agregar una reserva");
-            System.out.println("3. Hacer check-in");
-            System.out.println("4. Hacer check-out");
-            System.out.println("5. Mostrar todos los clientes");
-            System.out.println("6. Mostrar todas las reservas");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
-
-            try {
-                opcion = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Ingrese un número.");
-                continue;
+    private Usuario buscarUsuario(String mail, String contrasenia) {
+        for (Administrador admin : hotel.getAdministradores().obtenerTodos()) {
+            if (admin.getMail().equals(mail) && admin.getContraseña().equals(contrasenia)) {
+                return admin;
             }
+        }
 
+        for (Recepcionista recep : hotel.getRecepcionistas().obtenerTodos()) {
+            if (recep.getMail().equals(mail) && recep.getContraseña().equals(contrasenia)) {
+                return recep;
+            }
+        }
+
+        for (Cliente cliente : hotel.getClientes().obtenerTodos()) {
+            if (cliente.getMail().equals(mail) && cliente.getContraseña().equals(contrasenia)) {
+                return cliente;
+            }
+        }
+
+        return null;
+    }
+
+    private void menuAdministrador(Administrador admin) {
+        System.out.println("\nBienvenido, Administrador " + admin.getNombre());
+
+        boolean salir = false;
+        while (!salir) {
+            System.out.println("\n--- MENÚ ADMINISTRADOR ---");
+            System.out.println("1. Ver habitaciones");
+            System.out.println("2. Ver clientes");
+            System.out.println("3. Ver recepcionistas");
+            System.out.println("4. Agregar administradores");
+            System.out.println("5. Agregar Recepcionistas");
+            System.out.println("6. Salir");
+            System.out.print("Opción: ");
+
+            String opcion = scanner.nextLine();
             switch (opcion) {
-                case 1 -> listarHabitacionesDisponibles();
-                case 2 -> agregarReserva();
-                case 3 -> hacerCheckIn();
-                case 4 -> hacerCheckOut();
-                case 5 -> mostrarClientes();
-                case 6 -> mostrarReservas();
-                case 0 -> System.out.println("Saliendo del sistema...");
-                default -> System.out.println("Opción inválida.");
+                case "1":
+                    System.out.println(hotel.getHabitaciones().mostrar());
+                    break;
+                case "2":
+                    System.out.println(hotel.getClientes().mostrar());
+                    break;
+                case "3":
+                    System.out.println(hotel.getRecepcionistas().mostrar());
+                    break;
+                case "4":
+                    agregarAdmin();
+                    hotel.grabarAdministradores();
+                    break;
+                case "5":
+                    agregarRecepcionista();
+                    hotel.grabarRecepcionistas();
+                    break;
+                case "6":
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
             }
-
-        } while (opcion != 0);
+        }
     }
 
-    private void listarHabitacionesDisponibles() {
+    private void menuRecepcionista(Recepcionista recepcionista) {
+        System.out.println("\nBienvenido, Recepcionista " + recepcionista.getNombre());
+
+        boolean salir = false;
+        while (!salir) {
+            System.out.println("\n--- MENÚ RECEPCIONISTA ---");
+            System.out.println("1. Hacer check-in");
+            System.out.println("2. Hacer check-out");
+            System.out.println("3. Ver reservas");
+            System.out.println("4. Agregar cliente");
+            System.out.println("5. Agregar reserva");
+            System.out.println("6. Ver clientes");
+            System.out.println("7. Ver Habitaciones");
+            System.out.println("8. Eliminar Reserva");
+            System.out.println("9. Salir");
+            System.out.print("Opción: ");
+
+            String opcion = scanner.nextLine();
+            switch (opcion) {
+                case "1":
+                    Cliente clienteIn = seleccionarCliente();
+                    if (clienteIn != null) {
+                        recepcionista.hacerCheckIn(clienteIn);
+                    }
+                    break;
+                case "2":
+                    Cliente clienteOut = seleccionarCliente();
+                    if (clienteOut != null) {
+                        recepcionista.hacerCheckOut(clienteOut);
+                    }
+                    break;
+                case "3":
+                    System.out.println(hotel.getReservas().mostrar());
+                    break;
+                case "4":
+                    agregarCliente();
+                    hotel.grabarClientes();
+                    break;
+                case "5":
+                    agregarReserva();
+                    hotel.grabarReservas();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarClientes();
+                    break;
+                case "6":
+                    System.out.println(hotel.getClientes().mostrar());
+                    break;
+                case "7":
+                    System.out.println(hotel.getHabitaciones().mostrar());
+                    break;
+                case "8":
+                    eliminarReserva();
+                    hotel.grabarReservas();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarClientes();
+                    break;
+                case "9":
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        }
+    }
+
+    private void menuCliente(Cliente cliente) {
+        System.out.println("\nBienvenido, Cliente " + cliente.getNombre());
+
+        boolean salir = false;
+        while (!salir) {
+            System.out.println("\n--- MENÚ CLIENTE ---");
+            System.out.println("1. Ver mis reservas");
+            System.out.println("2. Ver habitaciones disponibles");
+            System.out.println("3. Salir");
+            System.out.print("Opción: ");
+
+            String opcion = scanner.nextLine();
+            switch (opcion) {
+                case "1":
+                    System.out.println(cliente.mostrarReservas());
+                    break;
+                case "2":
+                    verHabitacionesDisponibles();
+                    break;
+                case "3":
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        }
+    }
+
+    private Cliente seleccionarCliente() {
+        System.out.println("Ingrese DNI del cliente: ");
+        String dni = scanner.nextLine();
+
+        for (Cliente c : hotel.getClientes().obtenerTodos()) {
+            if (c.getDni().equals(dni)) {
+                return c;
+            }
+        }
+        System.out.println("Cliente no encontrado.");
+        return null;
+    }
+
+    private void verHabitacionesDisponibles() {
         try {
-            System.out.println("Ingrese la fecha de inicio (YYYY-MM-DD): ");
+            System.out.print("Ingrese fecha de inicio (YYYY-MM-DD): ");
             LocalDate inicio = LocalDate.parse(scanner.nextLine());
 
-            System.out.println("Ingrese la fecha de fin (YYYY-MM-DD): ");
+            System.out.print("Ingrese fecha de fin (YYYY-MM-DD): ");
             LocalDate fin = LocalDate.parse(scanner.nextLine());
 
-            List<Habitacion> disponibles = hotel.obtenerHabitacionesDisponibles(inicio, fin);
+            var disponibles = hotel.obtenerHabitacionesDisponibles(inicio, fin);
 
             if (disponibles.isEmpty()) {
-                System.out.println("No hay habitaciones disponibles en ese período.");
+                System.out.println("No hay habitaciones disponibles en esas fechas.");
             } else {
                 System.out.println("Habitaciones disponibles:");
                 for (Habitacion h : disponibles) {
                     System.out.println(h);
                 }
             }
+
         } catch (Exception e) {
-            System.out.println("Error al procesar fechas: " + e.getMessage());
+            System.out.println("Formato de fecha inválido.");
         }
     }
 
-    private void agregarReserva() {
-        try {
+    private void cargarDatos() {
+        hotel.leerAdministradores();
+        hotel.leerRecepcionistas();
+        hotel.leerClientes();
+        hotel.leerHabitaciones();
+        hotel.leerReservas();
+    }
+
+    private void agregarCliente(){
+
+        try{
+            System.out.println("--Registro de nuevo cliente--\n");
+            System.out.println("Ingrese el nombre del cliente: ");
+            String nombre = scanner.nextLine();
+
             System.out.println("Ingrese el DNI del cliente:");
-            String dniCliente = scanner.nextLine();
+            String dni = scanner.nextLine();
 
-            Cliente cliente = null;
-            for (Cliente c : hotel.getClientes().obtenerTodos()) {
-                if (c.getDni().equals(dniCliente)) {
-                    cliente = c;
-                    break;
+            System.out.print("Ingrese la nacionalidad: ");
+            String nacionalidad = scanner.nextLine();
+
+            System.out.print("Ingrese el domicilio: ");
+            String domicilio = scanner.nextLine();
+
+            System.out.print("Ingrese el mail: ");
+            String mail = scanner.nextLine();
+
+            System.out.print("Ingrese la contraseña: ");
+            String contraseña = scanner.nextLine();
+
+            Cliente nuevoCliente = new Cliente(dni, nombre, nacionalidad, domicilio, contraseña, mail);
+
+            hotel.agregarUsuario(nuevoCliente);
+            System.out.println("Cliente registrado con exito");
+        }
+        catch (UsuarioDuplicadoException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void agregarAdmin(){
+
+        try{
+            System.out.println("--Registro de nuevo admin--\n");
+            System.out.println("Ingrese el nombre del admin: ");
+            String nombre = scanner.nextLine();
+
+            System.out.println("Ingrese el DNI del admin:");
+            String dni = scanner.nextLine();
+
+            System.out.print("Ingrese la nacionalidad: ");
+            String nacionalidad = scanner.nextLine();
+
+            System.out.print("Ingrese el domicilio: ");
+            String domicilio = scanner.nextLine();
+
+            System.out.print("Ingrese el mail: ");
+            String mail = scanner.nextLine();
+
+            System.out.print("Ingrese la contraseña: ");
+            String contraseña = scanner.nextLine();
+
+            Administrador nuevoAdmin = new Administrador(dni, nombre, nacionalidad, domicilio, contraseña, mail);
+
+            hotel.agregarUsuario(nuevoAdmin);
+            System.out.println("Administrador registrado con exito");
+        }
+        catch (UsuarioDuplicadoException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void agregarRecepcionista(){
+
+        try{
+            System.out.println("--Registro de nuevo recepcionista--\n");
+            System.out.println("Ingrese el nombre del recepcionista: ");
+            String nombre = scanner.nextLine();
+
+            System.out.println("Ingrese el DNI del recepcionista:");
+            String dni = scanner.nextLine();
+
+            System.out.print("Ingrese la nacionalidad: ");
+            String nacionalidad = scanner.nextLine();
+
+            System.out.print("Ingrese el domicilio: ");
+            String domicilio = scanner.nextLine();
+
+            System.out.print("Ingrese el mail: ");
+            String mail = scanner.nextLine();
+
+            System.out.print("Ingrese la contraseña: ");
+            String contraseña = scanner.nextLine();
+
+            Recepcionista nuevoRecepcionista = new Recepcionista(dni, nombre, nacionalidad, domicilio, hotel, contraseña, mail);
+
+            hotel.agregarUsuario(nuevoRecepcionista);
+            System.out.println("Recepcionista registrado con exito");
+        }
+        catch (UsuarioDuplicadoException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void agregarReserva(){
+
+        try{
+            System.out.println(" ----- Crear nueva Reserva ----- ");
+
+            Cliente cliente = seleccionarCliente();
+            if (cliente == null) return;
+
+            System.out.println("Ingrese el numero de la habitacion: ");
+            String numString = scanner.nextLine();
+            int numeroHabitacion = 0;
+                try{
+                    numeroHabitacion = Integer.parseInt(numString);
+                } catch (NumberFormatException e) {
+                    System.out.println("El numero ingresado no es valido");
+                    return;
                 }
-            }
 
-            if (cliente == null) {
-                System.out.println("Cliente no encontrado.");
+            Habitacion habitacion = hotel.buscarHabitacionPorNumero(numeroHabitacion);
+            if (habitacion == null){
+                System.out.println("No se encontro una habitacion con el numero: " + numeroHabitacion);
                 return;
             }
 
-            System.out.println("Ingrese el número de habitación:");
-            int numeroHabitacion = Integer.parseInt(scanner.nextLine());
+            LocalDate inicio = null;
+            LocalDate fin = null;
+            try{
+                System.out.print("Ingrese fecha de inicio (YYYY-MM-DD): ");
+                inicio = LocalDate.parse(scanner.nextLine());
 
-            Habitacion habitacion = null;
-            for (Habitacion h : hotel.getHabitaciones().obtenerTodos()) {
-                if (h.getNumero() == numeroHabitacion) {
-                    habitacion = h;
-                    break;
-                }
-            }
-
-            if (habitacion == null) {
-                System.out.println("Habitación no encontrada.");
+                System.out.print("Ingrese fecha de fin (YYYY-MM-DD): ");
+                fin = LocalDate.parse(scanner.nextLine());
+            } catch (Exception e){
+                System.out.println("Error: formato de reserva invalido");
                 return;
             }
 
-            System.out.println("Ingrese la fecha de inicio (YYYY-MM-DD):");
-            LocalDate inicio = LocalDate.parse(scanner.nextLine());
+            Reserva reserva  = new Reserva(habitacion, cliente, inicio, fin);
 
-            System.out.println("Ingrese la fecha de fin (YYYY-MM-DD):");
-            LocalDate fin = LocalDate.parse(scanner.nextLine());
-
-            Reserva reserva = new Reserva(habitacion, cliente, inicio, fin);
+            //arroja la excepcion
             hotel.agregarReserva(reserva);
+            System.out.println("Reserva agregada con exito");
 
-            System.out.println("Reserva agregada con éxito.");
-        } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
-            System.out.println("Error al agregar reserva: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error general: " + e.getMessage());
+        } catch (FechaReservaInvalidaException e) {
+            System.out.println("Error: " + e.getMessage());
         }
+        catch (HabitacionNoDisponibleException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+
+
     }
 
-    private void hacerCheckIn() {
-        try {
-            System.out.println("Ingrese el DNI del cliente para hacer Check-In:");
-            String dni = scanner.nextLine();
+    public void eliminarReserva(){
 
-            Cliente cliente = null;
-            for (Cliente c : hotel.getClientes().obtenerTodos()) {
-                if (c.getDni().equals(dni)) {
-                    cliente = c;
-                    break;
-                }
-            }
+        try{
+            System.out.println(" --- Eliminar Una Reserva --- ");
 
-            if (cliente == null) {
-                System.out.println("Cliente no encontrado.");
+            Cliente cliente = seleccionarCliente();
+            String dni = cliente.getDni();
+            if (cliente == null) return;
+
+            System.out.println("Ingrese el numero de la habitacion: ");
+            String numString = scanner.nextLine();
+            int numeroHabitacion = 0;
+            try{
+                numeroHabitacion = Integer.parseInt(numString);
+            } catch (NumberFormatException e) {
+                System.out.println("El numero ingresado no es valido");
                 return;
             }
 
-            // Simulamos que lo hace el primer recepcionista
-            Recepcionista recepcionista = hotel.getRecepcionistas().obtenerTodos().get(0);
-            recepcionista.setHotel(hotel);
-            recepcionista.hacerCheckIn(cliente);
+            LocalDate fechaInicio = null;
+            LocalDate fechaFin = null;
+            try{
+                 System.out.println("Ingrese fecha de inicio (YYYY-MM-DD):");
+                 fechaInicio = LocalDate.parse(scanner.nextLine());
 
-            System.out.println("Check-in realizado correctamente.");
-        } catch (RuntimeException e) {
-            System.out.println("Error al hacer Check-in: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error inesperado: " + e.getMessage());
-        }
-    }
-
-    private void hacerCheckOut() {
-        try {
-            System.out.println("Ingrese el DNI del cliente para hacer Check-Out:");
-            String dni = scanner.nextLine();
-
-            Cliente cliente = null;
-            for (Cliente c : hotel.getClientes().obtenerTodos()) {
-                if (c.getDni().equals(dni)) {
-                    cliente = c;
-                    break;
-                }
-            }
-
-            if (cliente == null) {
-                System.out.println("Cliente no encontrado.");
+                 System.out.print("Ingrese fecha de fin (YYYY-MM-DD): ");
+                 fechaFin = LocalDate.parse(scanner.nextLine());
+            } catch (Exception e) {
+                System.out.println("Error: formato de reserva invalido");
                 return;
             }
 
-            Recepcionista recepcionista = hotel.getRecepcionistas().obtenerTodos().get(0);
-            recepcionista.setHotel(hotel);
-            recepcionista.hacerCheckOut(cliente);
+            hotel.eliminarReserva(dni, numeroHabitacion, fechaInicio, fechaFin);
+            System.out.println("Reserva eliminada con exito");
 
-            System.out.println("Check-out realizado correctamente.");
-        } catch (RuntimeException e) {
-            System.out.println("Error al hacer Check-out: " + e.getMessage());
-        } catch (Exception e) {
+        }catch (ClienteNoEncontradoException | ReservaNoEncontradaException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+        catch (Exception e){
             System.out.println("Error inesperado: " + e.getMessage());
         }
+
     }
 
-    private void mostrarClientes() {
-        System.out.println("\nLista de clientes:");
-        for (Cliente c : hotel.getClientes().obtenerTodos()) {
-            System.out.println(c);
-        }
-    }
 
-    private void mostrarReservas() {
-        System.out.println("\nLista de reservas:");
-        for (Reserva r : hotel.getReservas().obtenerTodos()) {
-            System.out.println("Cliente: " + r.getCliente().getNombre() + ", Habitación: " +
-                    r.getHabitacion().getNumero() + ", Desde: " + r.getFechaInicio() + ", Hasta: " + r.getFechaFin());
-        }
-    }
+
+
 }
 
+
+
+
+
 //    public static void main() {
-
-
-
 
             //Ejemplos para comprobar la funcionalidad de lso metodos
 

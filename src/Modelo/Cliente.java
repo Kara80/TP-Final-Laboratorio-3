@@ -29,7 +29,6 @@ public class Cliente extends Usuario{
     }
 
     public void agregarReserva(Reserva reserva){
-
         if (reserva != null){
             reservas.add(reserva);
         }
@@ -41,6 +40,34 @@ public class Cliente extends Usuario{
             reservas.remove(reserva);
         }
     }
+
+
+    public List<String> mostrarReservas(){
+        List<String> descripciones = new ArrayList<>();
+
+        if (this.getReservas().isEmpty()) {
+            descripciones.add("No tienes reservas registradas.");
+            return descripciones;
+        }
+
+        for (Reserva reserva : this.getReservas()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Estado de reserva: ").append(reserva.getEstadoDeReserva()).append("\n");
+            sb.append("Fecha de inicio: ").append(reserva.getFechaInicio()).append("\n");
+            sb.append("Fecha de fin: ").append(reserva.getFechaFin()).append("\n");
+
+            Habitacion h = reserva.getHabitacion();
+            sb.append("CNumero de habitacion: ").append(h.getNumero());
+            sb.append("Capacidad: ").append(h.getCapacidad()).append("\n");
+            sb.append("Estado de habitación: ").append(h.getEstadoHabitacion()).append("\n");
+
+            descripciones.add(sb.toString());
+        }
+
+        return descripciones;
+
+    }
+
 
     //-------------------------- JAVA A JSON --------------------------//
     /*
@@ -97,10 +124,13 @@ public class Cliente extends Usuario{
         try {
             if (json.has("reservas")) {
                 JSONArray jsonReservas = json.getJSONArray("reservas");
+                ArrayList<Reserva>reservaAux = new ArrayList<>();
                 for (int i = 0; i < jsonReservas.length(); i++){
-                    Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(i));
-                    cliente.agregarReserva(r);
+                    Reserva r = Reserva.jsonAReservaSinCliente(jsonReservas.getJSONObject(i));
+                    r.setCliente(cliente);
+                    reservaAux.add(r);
                 }
+                cliente.setReservas(reservaAux);
             }
         } catch (JSONException e){
             e.printStackTrace();
@@ -108,8 +138,37 @@ public class Cliente extends Usuario{
         return cliente;
     }
 
+    // no carga reserva a cliente
+    public static Cliente jsonAClienteSinReserva(JSONObject json){
+        Cliente cliente = new Cliente();
+        cliente.cargarDesdeJson(json);  // ← carga comunes
+
+        return cliente;
+    }
+
+
     @Override
-    public String toString() {
-        return "Cliente: " + getNombre() + " - DNI: " + getDni() + " - mail: "+getMail();
+    public String obtenerIdentificador() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("----------------------------------------------------------------------------------\n");
+
+        sb.append(super.obtenerIdentificador());
+
+        if (reservas != null && !reservas.isEmpty()){
+            sb.append("\nReservas: ");
+            for (Reserva r : reservas){
+
+                sb.append("Habitacion N°: ").append(r.getHabitacion().getNumero());
+                sb.append(" - Desde ").append(r.getFechaInicio()).append(" hasta ").append(r.getFechaFin());
+            }
+        }
+        else{
+            sb.append("\nSin reservas.");
+        }
+        sb.append("\n----------------------------------------------------------------------------------");
+
+
+        return sb.toString();
     }
 }

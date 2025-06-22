@@ -29,6 +29,10 @@ public class Habitacion {
         return reservas;
     }
 
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
+    }
+
     public EstadoDeHabitacion getEstadoHabitacion() {
         return estadoHabitacion;
     }
@@ -56,6 +60,7 @@ public class Habitacion {
 
     /*
     Verifica si entre las fechas pasadas por parametro hay alguna reserva ya hecha para esta habitacion.
+    Se usa para recorrer lista de habitaciones y verificar cuales estan disponibles.
      */
     public boolean estaDisponible(LocalDate fechaInicio, LocalDate fechaFinal){
 
@@ -90,14 +95,23 @@ public class Habitacion {
         }
 
         //si la habitacion esta reservada entre esas fechas se arroja la excepcion y se avisa
-        if (!estaDisponible(nuevaReserva.getFechaInicio(), nuevaReserva.getFechaFin())){
-            throw new HabitacionNoDisponibleException("La habitacion se encuentra reservada entre las fechas " +
-                        nuevaReserva.getFechaInicio() + " y " + nuevaReserva.getFechaFin() + " ." , nuevaReserva.getHabitacion().getNumero());
-        }
+        //las fechas de esa reserva ya hecha
+            for (Reserva r : reservas){
+                if (r.chocaConFechas(nuevaReserva.getFechaInicio(), nuevaReserva.getFechaFin())){
+                    throw new HabitacionNoDisponibleException("La habitacion se encuentra reservada entre las fechas "
+                            + r.getFechaInicio() + " hasta " + r.getFechaFin() + " ." , this.getNumero());
+                }
+            }
 
         //si no se entro a ningun if se puede agregar una nueva reserva a la Habitacion
         reservas.add(nuevaReserva);
 
+    }
+
+    public void eliminarReserva(Reserva reserva){
+        if (reserva != null){
+            this.reservas.remove(reserva);
+        }
     }
 
     //----------------------- JAVA A JSON -----------------------//
@@ -136,7 +150,7 @@ public class Habitacion {
                 JSONObject jsonReserva = r.reservaAJsonSinHabitacion();
                 jsonReservas.put(jsonReserva);
             }
-            jsonHabitacion.put("reservas", getReservas());
+            jsonHabitacion.put("reservas", jsonReservas);
 
         }
         catch (JSONException e){
@@ -148,6 +162,7 @@ public class Habitacion {
     }
 
     // ------------------------- JSON A Habitacion -------------------------//
+    //Esta se va a invocar en Hotel :D
     public static Habitacion jsonAHabitacion(JSONObject json){
         Habitacion habitacion = new Habitacion(0, 0);  // valores provisorios, los seteamos enseguida
 
@@ -159,8 +174,37 @@ public class Habitacion {
             EstadoDeHabitacion estado = EstadoDeHabitacion.valueOf(json.getString("estadoHbitacion"));
             habitacion.setEstadoHabitacion(estado);
 
+            JSONArray jsonReservas = json.getJSONArray("reservas");
+            ArrayList<Reserva>reservasAux = new ArrayList<>();
+            for (int i = 0 ; i< jsonReservas.length(); i++){
+
+                Reserva r = Reserva.jsonAReservaSinHabitacion(jsonReservas.getJSONObject(i));
+
+                r.setHabitacion(habitacion);
+
+                reservasAux.add(r);
+            }
+            habitacion.setReservas(reservasAux);
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return habitacion;
+    }
+    //Esta se va a invocar en Reserva, no carga Reservas
+    public static Habitacion jsonAHabitacionSinReserva(JSONObject json){
+        Habitacion habitacion = new Habitacion(0, 0);  // valores provisorios, los seteamos enseguida
+
+        try {
+            habitacion.setNumero(json.getInt("numero"));
+            habitacion.setCapacidad(json.getInt("capacidad"));
+
+            // EstadoDeHabitacion desde String
+            EstadoDeHabitacion estado = EstadoDeHabitacion.valueOf(json.getString("estadoHbitacion"));
+            habitacion.setEstadoHabitacion(estado);
+
             // No cargamos reservas para evitar bucle
-            habitacion.getReservas().clear();
 
         } catch (JSONException e){
             e.printStackTrace();
@@ -182,8 +226,31 @@ public class Habitacion {
         return Objects.hashCode(numero);
     }
 
+    //Muestra habitacion sin entrar en bucle con reserva
     @Override
     public String toString() {
-        return "Habitación Nº " + getNumero() + " - Capacidad: " + getCapacidad()+ "Estado Actual: "+getEstadoHabitacion();
+        StringBuilder sb = new StringBuilder();
+        sb.append("----------------------------------------------------------------------------------\n");
+
+        sb.append("Habitacion N°: ").append(getNumero()).
+                append(" - Capacidad: ").append(getCapacidad()).
+                append(" - Estado actual: ").append(getEstadoHabitacion());
+
+        if (reservas != null && !reservas.isEmpty()){
+            sb.append("\nReservas:\n");
+
+            for (Reserva r : reservas){
+                sb.append("- Ocupada por DNI:" ).append(r.getCliente().getDni())
+                        .append(" desde ").append(r.getFechaInicio()).append(" hasta ").append(r.getFechaFin());
+                sb.append("\n");
+            }
+        }
+        else{
+            sb.append("\nSin reservas.");
+        }
+        sb.append("\n----------------------------------------------------------------------------------\n");
+
+
+        return sb.toString();
     }
 }

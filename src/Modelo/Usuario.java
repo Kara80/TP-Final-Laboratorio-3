@@ -1,11 +1,12 @@
 package Modelo;
 
+import Interface.Identificable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
 
-public abstract class Usuario {
+public abstract class Usuario implements Identificable {
     private String dni;
     private String nombre;
     private String nacionalidad;
@@ -83,7 +84,7 @@ public abstract class Usuario {
             jsonUsuario.put("domicilio", getDomicilio());
             jsonUsuario.put("nacionalidad", getNacionalidad());
             jsonUsuario.put("contraseña", getContraseña());
-            jsonUsuario.put("contraseña", getContraseña());
+            jsonUsuario.put("mail", getMail());
         }
         catch (JSONException e){
             e.printStackTrace();
@@ -100,7 +101,6 @@ public abstract class Usuario {
             this.setNacionalidad(json.getString("nacionalidad"));
             this.setDomicilio(json.getString("domicilio"));
             this.setContraseña(json.getString("contraseña"));
-
             this.setMail(json.getString("mail"));
         } catch (JSONException e){
             e.printStackTrace();
@@ -125,13 +125,18 @@ public abstract class Usuario {
         return Objects.hash(dni, nacionalidad, contraseña, mail);
     }
 
+
     @Override
-    public String toString() {
-        return "Usuario{" +
-                "dni='" + dni + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", nacionalidad='" + nacionalidad + '\'' +
-                ", domicilio='" + domicilio + '\'' +
-                '}';
+    public String obtenerIdentificador() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Nombre: ").append(getNombre());
+        sb.append(" - Nacionalidad: ").append(getNacionalidad());
+        sb.append(" - DNI: ").append(getDni());
+        sb.append(" - Domicilio: ").append(getDomicilio());
+        sb.append(" - Mail: ").append(getMail());
+
+
+        return sb.toString();
     }
 }

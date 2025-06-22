@@ -1,16 +1,13 @@
 package Modelo;
 
 import Contenedores.Gestor;
-import Excepciones.FechaReservaInvalidaException;
-import Excepciones.HabitacionNoDisponibleException;
+import Excepciones.*;
 import Enum.EstadoDeHabitacion;
-import Excepciones.ReservaNoEncontradaException;
 import JSONUtiles.JsonUtiles;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +26,6 @@ public class Hotel {
         this.habitaciones = new Gestor<>();
         this.reservas = new Gestor<>();
     }
-
-
 
     public Gestor<Habitacion> getHabitaciones() {
         return habitaciones;
@@ -52,6 +47,136 @@ public class Hotel {
         return reservas;
     }
 
+
+
+    public void agregarUsuario(Usuario usuario) throws UsuarioDuplicadoException{
+        if (usuario == null ||
+            usuario.getDni() == null || usuario.getDni().isBlank() ||
+            usuario.getNombre() == null || usuario.getNombre().isBlank() ||
+            usuario.getContraseña() == null || usuario.getContraseña().isBlank() ||
+            usuario.getMail() == null || usuario.getMail().isBlank() ||
+            usuario.getDomicilio() == null || usuario.getDomicilio().isBlank() ||
+            usuario.getNacionalidad() == null || usuario.getNacionalidad().isBlank()){
+
+            throw new IllegalArgumentException("El usuario tiene datos incompletos o nulos");
+        }
+
+        verificarDatosUnicos(usuario);
+        if (usuario instanceof Cliente) clientes.agregar((Cliente) usuario);
+        if (usuario instanceof Administrador) administradores.agregar((Administrador) usuario);
+        if (usuario instanceof Recepcionista) recepcionistas.agregar((Recepcionista) usuario);
+
+    }
+
+    private void verificarDatosUnicos(Usuario nuevoUsuario) throws UsuarioDuplicadoException {
+        if (dniExiste(nuevoUsuario.getDni())) {
+            throw new UsuarioDuplicadoException("El DNI ya está registrado.");
+        }
+        if (mailExiste(nuevoUsuario.getMail())) {
+            throw new UsuarioDuplicadoException("El mail ya está registrado.");
+        }
+        if (contrasenaExiste(nuevoUsuario.getContraseña())) {
+            throw new UsuarioDuplicadoException("La contraseña ya está registrada.");
+        }
+    }
+
+    private List<Usuario> obtenerTodosLosUsuarios() {
+        List<Usuario> todos = new ArrayList<>();
+        todos.addAll(clientes.getElementos());
+        todos.addAll(recepcionistas.getElementos());
+        todos.addAll(administradores.getElementos());
+        return todos;
+    }
+
+    private boolean dniExiste(String dni) {
+        for (Usuario u : obtenerTodosLosUsuarios()) {
+            if (u.getDni().equals(dni)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean mailExiste(String mail) {
+        for (Usuario u : obtenerTodosLosUsuarios()) {
+            if (u.getMail().equals(mail)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean contrasenaExiste(String contrasena) {
+        for (Usuario u : obtenerTodosLosUsuarios()) {
+            if (u.getContraseña().equals(contrasena)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Habitacion buscarHabitacionPorNumero(int numero){
+
+        for (Habitacion h : habitaciones.obtenerTodos()){
+
+            if (h.getNumero() == numero){
+                return h;
+            }
+        }
+        return null;
+    }
+
+    public void eliminarReserva(String dniCliente, int numeroHabitacion, LocalDate fechaInicio, LocalDate fechaFin) throws ReservaNoEncontradaException, ClienteNoEncontradoException {
+
+        if (dniCliente == null || dniCliente.isBlank() ||
+            fechaInicio == null || fechaFin == null){
+            throw new IllegalArgumentException("Datos invalidos para eliminar una reserva.");
+        }
+
+        Cliente cliente = new Cliente();
+        for (Cliente c : clientes.obtenerTodos()){
+            if (c.getDni().equals(dniCliente)){
+                cliente = c;
+                break;
+            }
+        }
+
+        if (cliente == null){
+            throw new ClienteNoEncontradoException("No se encontro un cliente con el dni " + cliente.getDni());
+        }
+
+        Reserva reservaAEliminar = new Reserva();
+
+        for (Reserva r : reservas.obtenerTodos()){
+            if (r.getCliente().equals(cliente) &&
+                r.getHabitacion().getNumero() == numeroHabitacion &&
+                r.getFechaInicio().isEqual(fechaInicio) &&
+                r.getFechaFin().isEqual(fechaFin)){
+                reservaAEliminar = r;
+                break;
+            }
+        }
+
+        if (reservaAEliminar == null){
+            throw new ReservaNoEncontradaException("No se encontro una reserva que coincida con los datos pasados", cliente, fechaInicio);
+        }
+
+        //eliminar de la lista del cliente, lista de la habitacion y de la lista del hotel
+
+
+        //cliente.eliminarReserva(reservaAEliminar);
+        reservaAEliminar.getCliente().eliminarReserva(reservaAEliminar);
+
+
+        Habitacion habitacionDeReserva = reservaAEliminar.getHabitacion();
+        habitacionDeReserva.eliminarReserva(reservaAEliminar);
+
+
+        reservas.eliminar(reservaAEliminar);
+
+    }
+
+
     /*
         Recorre la lista de habitaciones y devuelve una lista con
         todas las habitaciones disponibles entre los dias dados.
@@ -62,7 +187,6 @@ public class Hotel {
         for (Habitacion h : habitaciones.obtenerTodos()){
 
             if (h.estaDisponible(fechaInicio, fechafinal)){
-
                 habitacionesDisponibles.add(h);
             }
         }
@@ -160,6 +284,8 @@ public class Hotel {
     }
 
     //--------------------------- JAVA A JSON ---------------------------//
+
+
     public JSONArray administradoresAJson(){
         JSONArray jsonAdministradores = new JSONArray();
 
@@ -193,7 +319,7 @@ public class Hotel {
         return jsonClientes;
     }
 
-    public JSONArray habitacionesAJson(){
+    public JSONArray habitacionAJsonConReservas(){
         JSONArray jsonHabitaciones = new JSONArray();
 
         for (Habitacion h : habitaciones.obtenerTodos()){
@@ -217,7 +343,7 @@ public class Hotel {
 
     //------------------------------------------------------------------//
     //--------------------------- JSON A Hotel ---------------------------//
-    public static Hotel jsonAHotel(JSONObject jsonHotel) {
+    /*public static Hotel jsonAHotel(JSONArray jsonHotel) {
         Hotel hotel = new Hotel();
         //Haciendo la deserialización
         try {
@@ -274,7 +400,7 @@ public class Hotel {
         }
 
         return hotel;
-    }
+    }*/
 
 
     //-------------------------Lectura JSON-----------------------------//
@@ -353,7 +479,7 @@ public class Hotel {
     public void grabarHabitaciones(){
 
         try{
-            JsonUtiles.grabarUnJson(habitacionesAJson(),"Habitaciones.json");
+            JsonUtiles.grabarUnJson(habitacionAJsonConReservas(),"Habitaciones.json");
         }
         catch(Exception e){
             System.out.println("No se ha podido grabar el archivo");

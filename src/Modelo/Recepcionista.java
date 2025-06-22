@@ -33,9 +33,9 @@ public class Recepcionista extends Usuario{
 
             hotel.checkIn(cliente);
         } catch (HabitacionNoDisponibleException e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         } catch (ReservaNoEncontradaException e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -44,9 +44,9 @@ public class Recepcionista extends Usuario{
         try{
             hotel.checkOut(cliente);
         } catch (HabitacionNoDisponibleException e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         } catch (ReservaNoEncontradaException e) {
-            throw new RuntimeException(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -80,5 +80,14 @@ public class Recepcionista extends Usuario{
         return recep;
     }
 
+    @Override
+    public String obtenerIdentificador() {
+        StringBuilder sb = new StringBuilder();
 
+        sb.append("----------------------------------------------------------------------------------\n");
+        sb.append(super.obtenerIdentificador());
+        sb.append("\n----------------------------------------------------------------------------------");
+
+        return sb.toString();
+    }
 }
