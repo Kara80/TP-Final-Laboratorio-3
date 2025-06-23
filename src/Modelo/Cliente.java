@@ -17,7 +17,7 @@ public class Cliente extends Usuario{
     }
 
     public Cliente() {
-
+    this.reservas = new ArrayList<>();
     }
 
     public List<Reserva> getReservas() {

@@ -161,15 +161,22 @@ public class Hotel {
             throw new ReservaNoEncontradaException("No se encontro una reserva que coincida con los datos pasados", cliente, fechaInicio);
         }
 
+        if (reservaAEliminar.getHabitacion().getEstadoHabitacion() != EstadoDeHabitacion.disponible &&
+        reservaAEliminar.getFechaInicio().isEqual(LocalDate.now())){
+
+            throw new ReservaNoEncontradaException("Ya se hizo checkin de la reserva", cliente, fechaInicio);
+        }
+
         //eliminar de la lista del cliente, lista de la habitacion y de la lista del hotel
 
 
         //cliente.eliminarReserva(reservaAEliminar);
         reservaAEliminar.getCliente().eliminarReserva(reservaAEliminar);
-
+        System.out.println(reservaAEliminar.getCliente().getReservas());
 
         Habitacion habitacionDeReserva = reservaAEliminar.getHabitacion();
         habitacionDeReserva.eliminarReserva(reservaAEliminar);
+        System.out.println(habitacionDeReserva.getReservas());
 
 
         reservas.eliminar(reservaAEliminar);
@@ -365,6 +372,12 @@ public class Hotel {
             for (int i = 0; i < jsonReservas.length(); i++){
                 Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(i));
                 reservas.agregar(r);
+                try {
+                    r.getHabitacion().agregarReserva(r);
+                    r.getCliente().agregarReserva(r);
+                } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
         catch(JSONException e){

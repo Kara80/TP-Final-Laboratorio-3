@@ -1,65 +1,26 @@
 [
     {
         "numero": 1,
-        "reservas": [{
-            "cliente": {
-                "tipo": "cliente",
-                "domicilio": "racedo",
-                "mail": "juan@gmai.",
-                "nombre": "Juan Pérez",
-                "dni": "12345678",
-                "nacionalidad": "argentina",
-                "contraseña": "mdp"
-            },
-            "fechaInicio": "2025-06-13",
-            "estadoReserva": "reservada",
-            "fechaFin": "2025-06-25"
-        }],
+        "reservas": [],
         "estadoHbitacion": "disponible",
         "capacidad": 2
     },
     {
         "numero": 2,
-        "reservas": [{
-            "cliente": {
-                "tipo": "cliente",
-                "domicilio": "gueme",
-                "mail": "kari@gmai.",
-                "nombre": "kari Pérez",
-                "dni": "12312342",
-                "nacionalidad": "argentina",
-                "contraseña": "mdp"
-            },
-            "fechaInicio": "2025-07-25",
-            "estadoReserva": "reservada",
-            "fechaFin": "2025-09-30"
-        }],
+        "reservas": [],
         "estadoHbitacion": "disponible",
         "capacidad": 2
     },
     {
         "numero": 3,
-        "reservas": [{
-            "cliente": {
-                "tipo": "cliente",
-                "domicilio": "39",
-                "mail": "luca@gmai.",
-                "nombre": "luca Pérez",
-                "dni": "45645632",
-                "nacionalidad": "argentina",
-                "contraseña": "mdp"
-            },
-            "fechaInicio": "2025-06-21",
-            "estadoReserva": "reservada",
-            "fechaFin": "2025-06-28"
-        }],
+        "reservas": [],
         "estadoHbitacion": "disponible",
         "capacidad": 4
     },
     {
         "numero": 4,
         "reservas": [],
-        "estadoHbitacion": "disponible",
+        "estadoHbitacion": "ocupada",
         "capacidad": 4
     }
 ]

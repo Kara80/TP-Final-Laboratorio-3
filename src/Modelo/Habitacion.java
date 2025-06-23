@@ -106,7 +106,7 @@ public class Habitacion {
 
     public void eliminarReserva(Reserva reserva){
         if (reserva != null){
-            this.reservas.remove(reserva);
+            reservas.remove(reserva);
         }
     }
 

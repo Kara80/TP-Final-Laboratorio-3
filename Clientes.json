@@ -3,16 +3,7 @@
         "tipo": "cliente",
         "domicilio": "racedo",
         "mail": "juan@gmai.",
-        "reservas": [{
-            "fechaInicio": "2025-06-13",
-            "estadoReserva": "reservada",
-            "fechaFin": "2025-06-25",
-            "habitacion": {
-                "numero": 1,
-                "estadoHbitacion": "disponible",
-                "capacidad": 2
-            }
-        }],
+        "reservas": [],
         "nombre": "Juan Pérez",
         "dni": "12345678",
         "nacionalidad": "argentina",
@@ -22,16 +13,7 @@
         "tipo": "cliente",
         "domicilio": "gueme",
         "mail": "kari@gmai.",
-        "reservas": [{
-            "fechaInicio": "2025-07-25",
-            "estadoReserva": "reservada",
-            "fechaFin": "2025-09-30",
-            "habitacion": {
-                "numero": 2,
-                "estadoHbitacion": "disponible",
-                "capacidad": 2
-            }
-        }],
+        "reservas": [],
         "nombre": "kari Pérez",
         "dni": "12312342",
         "nacionalidad": "argentina",
@@ -41,16 +23,7 @@
         "tipo": "cliente",
         "domicilio": "39",
         "mail": "luca@gmai.",
-        "reservas": [{
-            "fechaInicio": "2025-06-21",
-            "estadoReserva": "reservada",
-            "fechaFin": "2025-06-28",
-            "habitacion": {
-                "numero": 3,
-                "estadoHbitacion": "disponible",
-                "capacidad": 4
-            }
-        }],
+        "reservas": [],
         "nombre": "luca Pérez",
         "dni": "45645632",
         "nacionalidad": "argentina",
@@ -65,5 +38,15 @@
         "dni": "43786700",
         "nacionalidad": "argentina",
         "contraseña": "peppers"
+    },
+    {
+        "tipo": "cliente",
+        "domicilio": "arabia",
+        "mail": "elbicho@gmail",
+        "reservas": [],
+        "nombre": "Ronaldo",
+        "dni": "7777",
+        "nacionalidad": "Portugues",
+        "contraseña": "siu"
     }
 ]

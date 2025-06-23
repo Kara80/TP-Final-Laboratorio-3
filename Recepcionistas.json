@@ -1,9 +1,11 @@
-[{
-    "tipo": "recepcionista",
-    "domicilio": "utn",
-    "mail": "lucre@gmail",
-    "nombre": "Lucre",
-    "dni": "63424124",
-    "nacionalidad": "Brazil",
-    "contraseña": "contrasenia"
-}]
+[
+    {
+        "tipo": "recepcionista",
+        "domicilio": "utn",
+        "mail": "lucre@gmail",
+        "nombre": "Lucre",
+        "dni": "63424124",
+        "nacionalidad": "Brazil",
+        "contraseña": "contrasenia"
+    }
+]
