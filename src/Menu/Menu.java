@@ -142,12 +142,18 @@ public class Menu{
                     if (clienteIn != null) {
                         recepcionista.hacerCheckIn(clienteIn);
                     }
+                    hotel.grabarReservas();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarClientes();
                     break;
                 case "2":
                     Cliente clienteOut = seleccionarCliente();
                     if (clienteOut != null) {
                         recepcionista.hacerCheckOut(clienteOut);
                     }
+                    hotel.grabarReservas();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarClientes();
                     break;
                 case "3":
                     System.out.println(hotel.getReservas().mostrar());

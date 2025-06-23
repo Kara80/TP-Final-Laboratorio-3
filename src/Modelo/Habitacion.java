@@ -89,10 +89,6 @@ public class Habitacion {
                 throw new FechaReservaInvalidaException("La fecha inicio debe ser anterior a la fecha final.");
         }
 
-        //si la habitacion no este disponible (ocupada o en_mantenimiento) no se puede reservar
-        if (this.estadoHabitacion != EstadoDeHabitacion.disponible){
-            throw new HabitacionNoDisponibleException("La habitacion no se encuentra disponible." , nuevaReserva.getHabitacion().getNumero());
-        }
 
         //si la habitacion esta reservada entre esas fechas se arroja la excepcion y se avisa
         //las fechas de esa reserva ya hecha
