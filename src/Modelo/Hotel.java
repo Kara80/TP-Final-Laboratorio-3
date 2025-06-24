@@ -115,6 +115,15 @@ public class Hotel {
         return false;
     }
 
+    public Cliente buscarClientePorDni(String dni) {
+        for (Cliente c : clientes.obtenerTodos()) {
+            if (c.getDni().equals(dni)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
     public Habitacion buscarHabitacionPorNumero(int numero){
 
         for (Habitacion h : habitaciones.obtenerTodos()){
@@ -365,25 +374,96 @@ public class Hotel {
         }
     }
 
-    public void leerReservas(){
+    /*
+    Lee todas las reservas almacenadas en Reservas.json
+    Convierte cada una de ellas desde JSON a un objeto Reserva, usando referencias ya existentes
+    de clientes y habitaciones.
+    Asocia cada reserva a su cliente y habitacion  (relaciones compartidas, no duplicadas).
+    Agrega todas las reservas el gestor general de reservas del Hotel.
+     */
+    public void leerReservas() {
+        reservas.limpiar(); // limpia las reservas actuales
+
+        try{
+            // lee el contenido del archivo JSON y lo convierte en un arreglo de objetos JSON
+            JSONArray jsonArray = new JSONArray(JsonUtiles.leerUnJson("Reservas.json"));
+
+            // va por cada reserva
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonReserva = jsonArray.getJSONObject(i);
+                // convierte el JSON en una instancia de Reserva,
+                // utilizando las listas actuales de clientes y habitaciones para evitar duplicados
+                Reserva reserva = Reserva.jsonAReservaConReferencias(jsonReserva, clientes.getElementos(), habitaciones.getElementos());
+
+                // si se encontro correctamente unc liente vinculado,
+                // le agregamos la reserva a su lista interna
+                if (reserva.getCliente() != null) {
+                    reserva.getCliente().getReservas().add(reserva);
+                }
+
+                // lo mismo con la habitacion
+                if (reserva.getHabitacion() != null) {
+                    reserva.getHabitacion().getReservas().add(reserva);
+                }
+
+                // se agrega la reserva al gestor general del Hotel
+                reservas.agregar(reserva);
+            }
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+    /*
+    Cual era nuestro problema antes ?
+    Antes, al leer el JSON creabamos nuevas instancias de Cliente y Habitacion , con metodos como:
+    - reserva.setCliente(jsonAClienteSinReservas(json.getJSONObject("cliente")));
+    - reserva.setHabitacion(jsonAHabitacionSinReservas(json.getJSONObject("habitacion")));
+    Eso hacia que las reservas estuvieran vinculadas a copias, no a los objetos ya existentes en memoria del Hotel.
+    Por eso, al eliminar la reserva del hotel, no se eliminaba de la lista de reservas de cliente o de la de habitacion,
+    porque eran objetos distintos (aunque con los mismos datos).
+     */
+
+   /* public void leerReservas(){
 
         try{
             JSONArray jsonReservas = new JSONArray(JsonUtiles.leerUnJson("Reservas.json"));
             for (int i = 0; i < jsonReservas.length(); i++){
+
                 Reserva r = Reserva.jsonAReserva(jsonReservas.getJSONObject(i));
-                reservas.agregar(r);
-                try {
-                    r.getHabitacion().agregarReserva(r);
-                    r.getCliente().agregarReserva(r);
-                } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
-                    throw new RuntimeException(e);
+
+                Habitacion habitacionReal = buscarHabitacionPorNumero(r.getHabitacion().getNumero());
+                Cliente clienteReal = buscarClientePorDni(r.getCliente().getDni());
+
+                if (habitacionReal != null && clienteReal != null){
+
+                    r.setHabitacion(habitacionReal);
+                    r.setCliente(clienteReal);
+
+
+                    try{
+                        //enlazar reesrva a cliente y habitacion
+                        habitacionReal.agregarReserva(r);
+                        clienteReal.agregarReserva(r);
+                    }
+                 catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+                    System.out.println("Error al cargar reservas: " + e.getMessage());
                 }
+                    reservas.agregar(r);
+                }
+
+               // try {
+              //      r.getHabitacion().agregarReserva(r);
+               //     r.getCliente().agregarReserva(r);
+               // } catch (FechaReservaInvalidaException | HabitacionNoDisponibleException e) {
+               //     throw new RuntimeException(e);
+               // }
             }
         }
         catch(JSONException e){
             System.out.println("No se ha podido leer el archivo");
         }
-    }
+    }*/
 
     public void leerClientes(){
 
