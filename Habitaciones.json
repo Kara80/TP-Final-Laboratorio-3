@@ -20,7 +20,7 @@
     {
         "numero": 4,
         "reservas": [],
-        "estadoHbitacion": "ocupada",
+        "estadoHbitacion": "disponible",
         "capacidad": 4
     }
 ]

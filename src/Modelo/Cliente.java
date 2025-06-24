@@ -161,6 +161,7 @@ public class Cliente extends Usuario{
 
                 sb.append("Habitacion N°: ").append(r.getHabitacion().getNumero());
                 sb.append(" - Desde ").append(r.getFechaInicio()).append(" hasta ").append(r.getFechaFin());
+                sb.append("\n");
             }
         }
         else{

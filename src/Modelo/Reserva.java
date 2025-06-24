@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Reserva {
 
@@ -245,6 +246,52 @@ public class Reserva {
         return reserva;
     }
 
+    /*
+    Toma un JSONObject que representa una reserva y una lista de clientes y una lista de habitaciones ya cargadas.
+    En vez de crear instancias nuevas, busca referencias reales a los objetos ya existentes (ya sea por dni o por
+    num de habitacion) y las usa para asignarlas a la reserva, evitando duplicaciones.
+     */
+    public static Reserva jsonAReservaConReferencias(JSONObject json, List<Cliente> clientes, List<Habitacion> habitaciones) {
+        Reserva reserva = new Reserva();
+
+        try {
+            // estado de reserva
+            EstadoDeReserva estado = EstadoDeReserva.valueOf(json.getString("estadoReserva"));
+            reserva.setEstadoDeReserva(estado);
+
+            // fechas
+            reserva.setFechaInicio(LocalDate.parse(json.getString("fechaInicio")));
+            reserva.setFechaFin(LocalDate.parse(json.getString("fechaFin")));
+
+            // se obtiene el dni del cliente desde el JSON anidado
+            String dni = json.getJSONObject("cliente").getString("dni");
+
+            //se busca un cliente en la lista de clientes que tenga ese dni
+            Cliente cliente = clientes.stream()
+                    .filter(c -> c.getDni().equals(dni))//comparan el dni
+                    .findFirst()
+                    .orElse(null); //si no lo encuentra retorna null
+
+            // se obtiene el numero de la habitacion desde el JSON anidado
+            int numero = json.getJSONObject("habitacion").getInt("numero");
+
+            // se busca en la lista de habitaciones una que tenga ese numero
+            Habitacion habitacion = habitaciones.stream()
+                    .filter(h -> h.getNumero() == numero) //compara el numero
+                    .findFirst()
+                    .orElse(null); //si no lo encuentra retorna null
+
+            // asigno las referencias
+            reserva.cliente = cliente;
+            reserva.habitacion = habitacion;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // retorna le reserva cargada correctamente armada con referencias existentes
+        return reserva;
+    }
 
 
     @Override

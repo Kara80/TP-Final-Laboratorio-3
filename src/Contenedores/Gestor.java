@@ -39,6 +39,10 @@ public class Gestor <T> {
         return sb.toString();
     }
 
+    public void limpiar(){
+        elementos.clear();
+    }
+
     public List<T> obtenerTodos(){
         return new ArrayList<>(elementos);
     }
