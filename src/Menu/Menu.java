@@ -87,7 +87,9 @@ public class Menu{
             System.out.println("3. Ver recepcionistas");
             System.out.println("4. Agregar administradores");
             System.out.println("5. Agregar Recepcionistas");
-            System.out.println("6. Salir");
+            System.out.println("6. Eliminar recepcionista");
+            System.out.println("7. Eliminar administrador");
+            System.out.println("8. Salir");
             System.out.print("Opción: ");
 
             String opcion = scanner.nextLine();
@@ -110,6 +112,18 @@ public class Menu{
                     hotel.grabarRecepcionistas();
                     break;
                 case "6":
+                    eliminarRecepcionista();
+                    hotel.grabarRecepcionistas();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarReservas();
+                    break;
+                case "7":
+                    eliminarAdministrador();
+                    hotel.grabarAdministradores();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarReservas();
+                    break;
+                case "8":
                     salir = true;
                     break;
                 default:
@@ -132,7 +146,8 @@ public class Menu{
             System.out.println("6. Ver clientes");
             System.out.println("7. Ver Habitaciones");
             System.out.println("8. Eliminar Reserva");
-            System.out.println("9. Salir");
+            System.out.println("9. Eliminar cliente");
+            System.out.println("10. Salir");
             System.out.print("Opción: ");
 
             String opcion = scanner.nextLine();
@@ -181,6 +196,12 @@ public class Menu{
                     hotel.grabarClientes();
                     break;
                 case "9":
+                    eliminarCliente();
+                    hotel.grabarClientes();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarReservas();
+                    break;
+                case "10":
                     salir = true;
                     break;
                 default:
@@ -453,5 +474,69 @@ public class Menu{
             System.out.println("Error inesperado: " + e.getMessage());
         }
 
+    }
+
+    private Usuario buscarUsuarioPorDni(String dni) {
+        for (Administrador admin : hotel.getAdministradores().obtenerTodos()) {
+            if (admin.getDni().equals(dni)) {
+                return admin;
+            }
+        }
+
+        for (Recepcionista recep : hotel.getRecepcionistas().obtenerTodos()) {
+            if (recep.getDni().equals(dni)) {
+                return recep;
+            }
+        }
+
+        for (Cliente cliente : hotel.getClientes().obtenerTodos()) {
+            if (cliente.getDni().equals(dni)) {
+                return cliente;
+            }
+        }
+
+        return null;
+    }
+
+    private void eliminarRecepcionista() {
+        System.out.print("Ingrese DNI del recepcionista a eliminar: ");
+        String dni = scanner.nextLine();
+
+        Usuario usuario = buscarUsuarioPorDni(dni);
+        if (usuario instanceof Recepcionista) {
+            hotel.eliminarUsuario(usuario);
+
+            System.out.println("Recepcionista eliminado correctamente.");
+        } else {
+            System.out.println("No se encontró un recepcionista con ese DNI.");
+        }
+    }
+
+    private void eliminarAdministrador() {
+        System.out.print("Ingrese DNI del administrador a eliminar: ");
+        String dni = scanner.nextLine();
+
+        Usuario usuario = buscarUsuarioPorDni(dni);
+        if (usuario instanceof Administrador) {
+            hotel.eliminarUsuario(usuario);
+
+            System.out.println("Administrador eliminado correctamente.");
+        } else {
+            System.out.println("No se encontró un administrador con ese DNI.");
+        }
+    }
+
+    private void eliminarCliente() {
+        System.out.print("Ingrese DNI del cliente a eliminar: ");
+        String dni = scanner.nextLine();
+
+        Usuario usuario = buscarUsuarioPorDni(dni);
+        if (usuario instanceof Cliente) {
+            hotel.eliminarUsuario(usuario);
+
+            System.out.println("Cliente eliminado correctamente.");
+        } else {
+            System.out.println("No se encontró un cliente con ese DNI.");
+        }
     }
 }

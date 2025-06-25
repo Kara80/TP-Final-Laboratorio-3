@@ -47,7 +47,40 @@ public class Hotel {
         return reservas;
     }
 
+    public void eliminarUsuario(Usuario usuario){
+        if (usuario == null || usuario.getDni() == null || usuario.getDni().isBlank()){
+            throw new IllegalArgumentException("El usuario es nulo o su dni es invalido.");
+        }
 
+        if (usuario instanceof Cliente cliente){
+
+            List<Reserva > reservasAEliminar = new ArrayList<>();
+            for (Reserva r : reservas.obtenerTodos()){
+                if (r.getCliente().equals(cliente)){
+                    reservasAEliminar.add(r);
+                }
+            }
+
+            for (Reserva r : reservasAEliminar){
+                r.getHabitacion().eliminarReserva(r);
+                cliente.eliminarReserva(r);
+                reservas.eliminar(r);
+            }
+
+            clientes.eliminar(cliente);
+        }
+        else if (usuario instanceof Administrador admin) {
+            administradores.eliminar(admin);
+        }
+        else if (usuario instanceof Recepcionista recepcionista) {
+            recepcionistas.eliminar(recepcionista);
+        }
+        else{
+            throw new IllegalArgumentException("Tipo de usuario invalido ");
+        }
+
+
+    }
 
     public void agregarUsuario(Usuario usuario) throws UsuarioDuplicadoException{
         if (usuario == null ||
@@ -115,14 +148,7 @@ public class Hotel {
         return false;
     }
 
-    public Cliente buscarClientePorDni(String dni) {
-        for (Cliente c : clientes.obtenerTodos()) {
-            if (c.getDni().equals(dni)) {
-                return c;
-            }
-        }
-        return null;
-    }
+
 
     public Habitacion buscarHabitacionPorNumero(int numero){
 
@@ -397,12 +423,12 @@ public class Hotel {
 
                 // si se encontro correctamente unc liente vinculado,
                 // le agregamos la reserva a su lista interna
-                if (reserva.getCliente() != null) {
+                if (reserva.getCliente() != null && !reserva.getCliente().getReservas().contains(reserva)) {
                     reserva.getCliente().getReservas().add(reserva);
                 }
 
                 // lo mismo con la habitacion
-                if (reserva.getHabitacion() != null) {
+                if (reserva.getHabitacion() != null && !reserva.getHabitacion().getReservas().contains(reserva) ) {
                     reserva.getHabitacion().getReservas().add(reserva);
                 }
 

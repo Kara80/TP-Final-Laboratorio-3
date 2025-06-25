@@ -89,6 +89,9 @@ public class Habitacion {
                 throw new FechaReservaInvalidaException("La fecha inicio debe ser anterior a la fecha final.");
         }
 
+        if (nuevaReserva.getFechaInicio().isBefore(LocalDate.now())){
+            throw new FechaReservaInvalidaException("No se puede reesrvar en una fecha del pasado");
+        }
 
         //si la habitacion esta reservada entre esas fechas se arroja la excepcion y se avisa
         //las fechas de esa reserva ya hecha

@@ -156,7 +156,7 @@ public class Cliente extends Usuario{
         sb.append(super.obtenerIdentificador());
 
         if (reservas != null && !reservas.isEmpty()){
-            sb.append("\nReservas: ");
+            sb.append("\nReservas:\n");
             for (Reserva r : reservas){
 
                 sb.append("Habitacion N°: ").append(r.getHabitacion().getNumero());
