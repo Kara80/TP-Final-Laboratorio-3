@@ -1,7 +1,20 @@
 [
     {
         "numero": 1,
-        "reservas": [],
+        "reservas": [{
+            "cliente": {
+                "tipo": "cliente",
+                "domicilio": "arabia",
+                "mail": "elbicho@gmail",
+                "nombre": "Ronaldo",
+                "dni": "7777",
+                "nacionalidad": "Portugues",
+                "contraseña": "siu"
+            },
+            "fechaInicio": "2025-07-10",
+            "estadoReserva": "reservada",
+            "fechaFin": "2025-07-15"
+        }],
         "estadoHbitacion": "disponible",
         "capacidad": 2
     },
@@ -13,7 +26,20 @@
     },
     {
         "numero": 3,
-        "reservas": [],
+        "reservas": [{
+            "cliente": {
+                "tipo": "cliente",
+                "domicilio": "arabia",
+                "mail": "elbicho@gmail",
+                "nombre": "Ronaldo",
+                "dni": "7777",
+                "nacionalidad": "Portugues",
+                "contraseña": "siu"
+            },
+            "fechaInicio": "2025-06-28",
+            "estadoReserva": "reservada",
+            "fechaFin": "2025-06-29"
+        }],
         "estadoHbitacion": "disponible",
         "capacidad": 4
     },

@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 public class Reserva {
 
@@ -293,6 +294,17 @@ public class Reserva {
         return reserva;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Reserva reserva = (Reserva) o;
+        return estadoDeReserva == reserva.estadoDeReserva && Objects.equals(habitacion, reserva.habitacion) && Objects.equals(cliente, reserva.cliente) && Objects.equals(fechaInicio, reserva.fechaInicio) && Objects.equals(fechaFin, reserva.fechaFin);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(estadoDeReserva, habitacion, cliente, fechaInicio, fechaFin);
+    }
 
     @Override
     public String toString() {

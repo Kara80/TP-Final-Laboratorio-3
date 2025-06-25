@@ -31,19 +31,30 @@
     },
     {
         "tipo": "cliente",
-        "domicilio": "alberti",
-        "mail": "pepe@gmail.com",
-        "reservas": [],
-        "nombre": "pepe",
-        "dni": "43786700",
-        "nacionalidad": "argentina",
-        "contraseña": "peppers"
-    },
-    {
-        "tipo": "cliente",
         "domicilio": "arabia",
         "mail": "elbicho@gmail",
-        "reservas": [],
+        "reservas": [
+            {
+                "fechaInicio": "2025-06-28",
+                "estadoReserva": "reservada",
+                "fechaFin": "2025-06-29",
+                "habitacion": {
+                    "numero": 3,
+                    "estadoHbitacion": "disponible",
+                    "capacidad": 4
+                }
+            },
+            {
+                "fechaInicio": "2025-07-10",
+                "estadoReserva": "reservada",
+                "fechaFin": "2025-07-15",
+                "habitacion": {
+                    "numero": 1,
+                    "estadoHbitacion": "disponible",
+                    "capacidad": 2
+                }
+            }
+        ],
         "nombre": "Ronaldo",
         "dni": "7777",
         "nacionalidad": "Portugues",
