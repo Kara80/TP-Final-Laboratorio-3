@@ -199,10 +199,12 @@ public class Hotel {
             throw new ReservaNoEncontradaException("No se encontro una reserva que coincida con los datos pasados", cliente, fechaInicio);
         }
 
-        if (reservaAEliminar.getHabitacion().getEstadoHabitacion() != EstadoDeHabitacion.disponible &&
-        reservaAEliminar.getFechaInicio().isEqual(LocalDate.now())){
+        LocalDate hoy = LocalDate.now();
+        if (reservaAEliminar.getHabitacion().getEstadoHabitacion() == EstadoDeHabitacion.ocupada &&
+                !hoy.isBefore(reservaAEliminar.getFechaInicio()) &&
+                !hoy.isAfter(reservaAEliminar.getFechaFin())) {
 
-            throw new ReservaNoEncontradaException("Ya se hizo checkin de la reserva", cliente, fechaInicio);
+            throw new ReservaNoEncontradaException("La reserva ya se encuentra en curso. No puede eliminarse.", cliente, fechaInicio);
         }
 
         //eliminar de la lista del cliente, lista de la habitacion y de la lista del hotel
