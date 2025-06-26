@@ -310,11 +310,14 @@ public class Reserva {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
+        sb.append("\n----------------------------------------------------------------------------------------------------------------------------------------------\n");
         sb.append("Estado de Reserva: ").append(getEstadoDeReserva()).
                 append(" - Fechas: desde ").append(getFechaInicio()).
                 append(" a ").append(getFechaFin());
         sb.append(" - DNI del cliente: ").append(getCliente().getDni());
         sb.append(" - Habitacion N°: ").append(getHabitacion().getNumero());
+
+        sb.append("\n----------------------------------------------------------------------------------------------------------------------------------------------");
 
 
         return sb.toString();

@@ -7,6 +7,8 @@ import JSONUtiles.JsonUtiles;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import Enum.EstadoDeHabitacion;
+import Enum.EstadoDeReserva;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class Hotel {
     public Gestor<Reserva> getReservas() {
         return reservas;
     }
+
 
     public void eliminarUsuario(Usuario usuario){
         if (usuario == null || usuario.getDni() == null || usuario.getDni().isBlank()){
@@ -180,7 +183,7 @@ public class Hotel {
             throw new ClienteNoEncontradoException("No se encontro un cliente con el dni " + cliente.getDni());
         }
 
-        Reserva reservaAEliminar = new Reserva();
+        Reserva reservaAEliminar = null;
 
         for (Reserva r : reservas.obtenerTodos()){
             if (r.getCliente().equals(cliente) &&

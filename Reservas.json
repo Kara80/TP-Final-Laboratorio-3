@@ -33,7 +33,26 @@
         "fechaFin": "2025-07-15",
         "habitacion": {
             "numero": 1,
-            "estadoHbitacion": "disponible",
+            "estadoHbitacion": "ocupada",
+            "capacidad": 2
+        }
+    },
+    {
+        "cliente": {
+            "tipo": "cliente",
+            "domicilio": "mdp",
+            "mail": "luco",
+            "nombre": "luca",
+            "dni": "123",
+            "nacionalidad": "arg",
+            "contraseña": "boca"
+        },
+        "fechaInicio": "2025-06-26",
+        "estadoReserva": "reservada",
+        "fechaFin": "2025-06-28",
+        "habitacion": {
+            "numero": 1,
+            "estadoHbitacion": "ocupada",
             "capacidad": 2
         }
     }
