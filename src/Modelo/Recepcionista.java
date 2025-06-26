@@ -27,27 +27,16 @@ public class Recepcionista extends Usuario{
         this.hotel = hotel;
     }
 
-    public void hacerCheckIn(Cliente cliente){
+    public void hacerCheckIn(Cliente cliente) throws HabitacionNoDisponibleException , ReservaNoEncontradaException{
 
-        try{
+        hotel.checkIn(cliente);
 
-            hotel.checkIn(cliente);
-        } catch (HabitacionNoDisponibleException e) {
-            e.printStackTrace();
-        } catch (ReservaNoEncontradaException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void hacerCheckOut(Cliente cliente){
+    public void hacerCheckOut(Cliente cliente) throws HabitacionNoDisponibleException , ReservaNoEncontradaException{
 
-        try{
-            hotel.checkOut(cliente);
-        } catch (HabitacionNoDisponibleException e) {
-            e.printStackTrace();
-        } catch (ReservaNoEncontradaException e) {
-            e.printStackTrace();
-        }
+        hotel.checkOut(cliente);
+
     }
 
     //------------ JAVA A HOTEL ------------//

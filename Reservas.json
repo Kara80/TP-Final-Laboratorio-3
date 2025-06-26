@@ -55,5 +55,24 @@
             "estadoHbitacion": "ocupada",
             "capacidad": 2
         }
+    },
+    {
+        "cliente": {
+            "tipo": "cliente",
+            "domicilio": "mdp",
+            "mail": "juanceto@gmail",
+            "nombre": "juancito",
+            "dni": "1234",
+            "nacionalidad": "argentina",
+            "contraseña": "juance"
+        },
+        "fechaInicio": "2025-06-26",
+        "estadoReserva": "reservada",
+        "fechaFin": "2025-06-27",
+        "habitacion": {
+            "numero": 4,
+            "estadoHbitacion": "ocupada",
+            "capacidad": 4
+        }
     }
 ]
