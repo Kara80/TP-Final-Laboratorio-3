@@ -52,14 +52,16 @@ public class Cliente extends Usuario{
 
         for (Reserva reserva : this.getReservas()) {
             StringBuilder sb = new StringBuilder();
+            sb.append("-------------------------------------------").append("\n");
             sb.append("Estado de reserva: ").append(reserva.getEstadoDeReserva()).append("\n");
             sb.append("Fecha de inicio: ").append(reserva.getFechaInicio()).append("\n");
             sb.append("Fecha de fin: ").append(reserva.getFechaFin()).append("\n");
 
             Habitacion h = reserva.getHabitacion();
-            sb.append("CNumero de habitacion: ").append(h.getNumero());
+            sb.append("Numero de habitacion: ").append(h.getNumero());
             sb.append("Capacidad: ").append(h.getCapacidad()).append("\n");
             sb.append("Estado de habitación: ").append(h.getEstadoHabitacion()).append("\n");
+            sb.append("---------------------------------------------").append("\n");
 
             descripciones.add(sb.toString());
         }
