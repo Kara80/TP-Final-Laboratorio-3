@@ -95,12 +95,12 @@ public class Habitacion {
 
         //si la habitacion esta reservada entre esas fechas se arroja la excepcion y se avisa
         //las fechas de esa reserva ya hecha
-            for (Reserva r : reservas){
-                if (r.chocaConFechas(nuevaReserva.getFechaInicio(), nuevaReserva.getFechaFin())){
-                    throw new HabitacionNoDisponibleException("La habitacion se encuentra reservada entre las fechas "
-                            + r.getFechaInicio() + " hasta " + r.getFechaFin() + " ." , this.getNumero());
-                }
+        for (Reserva r : reservas){
+            if (r.chocaConFechas(nuevaReserva.getFechaInicio(), nuevaReserva.getFechaFin())){
+                throw new HabitacionNoDisponibleException("La habitacion se encuentra reservada entre las fechas "
+                        + r.getFechaInicio() + " hasta " + r.getFechaFin() + " ." , this.getNumero());
             }
+        }
 
         //si no se entro a ningun if se puede agregar una nueva reserva a la Habitacion
         reservas.add(nuevaReserva);

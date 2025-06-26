@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
+import Enum.EstadoDeHabitacion;
 
 public class Menu{
     private Hotel hotel;
@@ -147,7 +148,8 @@ public class Menu{
             System.out.println("7. Ver Habitaciones");
             System.out.println("8. Eliminar Reserva");
             System.out.println("9. Eliminar cliente");
-            System.out.println("10. Salir");
+            System.out.println("10. Marcar/Desmarcar habitacion en mantenimiento");
+            System.out.println("11. Salir");
             System.out.print("Opción: ");
 
             String opcion = scanner.nextLine();
@@ -202,6 +204,12 @@ public class Menu{
                     hotel.grabarReservas();
                     break;
                 case "10":
+                    alternarEstadoMantenimientoHabitacion();
+                    hotel.grabarClientes();
+                    hotel.grabarHabitaciones();
+                    hotel.grabarReservas();
+                    break;
+                case "11":
                     salir = true;
                     break;
                 default:
@@ -403,6 +411,19 @@ public class Menu{
                 return;
             }
 
+            if (habitacion.getEstadoHabitacion() == EstadoDeHabitacion.en_mantenimiento){
+                System.out.println("La habitacion actualmente esta en mantenimiento.");
+                System.out.println("Seguro que desea continuar con la reserva? (s/n):");
+                char confirmacion = scanner.nextLine().charAt(0);
+                if (confirmacion == 's'){
+                    System.out.println("continuando con la reserva");
+                }
+                else{
+                    System.out.println("cancelando reserva");
+                    return;
+                }
+            }
+
             LocalDate inicio = null;
             LocalDate fin = null;
             try{
@@ -510,6 +531,7 @@ public class Menu{
         } else {
             System.out.println("No se encontró un recepcionista con ese DNI.");
         }
+
     }
 
     private void eliminarAdministrador() {
@@ -531,7 +553,31 @@ public class Menu{
         String dni = scanner.nextLine();
 
         Usuario usuario = buscarUsuarioPorDni(dni);
+
         if (usuario instanceof Cliente) {
+
+            Cliente cliente = (Cliente) usuario;
+
+            boolean tieneReservaOcupadaHoy = false;
+            LocalDate fechaHoy = LocalDate.now();
+
+            for (Reserva r : cliente.getReservas()){
+                Habitacion habitacion = r.getHabitacion();
+                if (habitacion != null &&
+                    habitacion.getEstadoHabitacion() == EstadoDeHabitacion.ocupada &&
+                    !fechaHoy.isBefore(r.getFechaInicio()) && //si hoy es igual o despues que el 1er dia de la reserva
+                    !fechaHoy.isAfter(r.getFechaFin())){ //si hoy es igual o antes que el ultimo dia de la reserva
+
+                    tieneReservaOcupadaHoy = true;
+                    break;
+                }
+            }
+
+            if (tieneReservaOcupadaHoy){
+                System.out.println("No se puede borrar el cliente porque esta ocupando una habitacion actualmente");
+                return;
+            }
+
             hotel.eliminarUsuario(usuario);
 
             System.out.println("Cliente eliminado correctamente.");
@@ -539,4 +585,41 @@ public class Menu{
             System.out.println("No se encontró un cliente con ese DNI.");
         }
     }
+
+    private void alternarEstadoMantenimientoHabitacion(){
+        System.out.println("Ingrese el numero de la habitacion: ");
+        int num = 0;
+
+        try{
+            num = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Numero invalido");
+            return;
+        }
+
+        Habitacion habitacion = hotel.buscarHabitacionPorNumero(num);
+
+        if (habitacion == null){
+            System.out.println("No se encontro una habitacion con el numero: " + num);
+            return;
+        }
+
+        EstadoDeHabitacion estadoDeHabitacionActual = habitacion.getEstadoHabitacion();
+
+        if (estadoDeHabitacionActual == EstadoDeHabitacion.en_mantenimiento){
+            habitacion.setEstadoHabitacion(EstadoDeHabitacion.disponible);
+            System.out.println("La habitacion num " + num + " paso de en mantenimiento a diponible.");
+        }
+        else if (estadoDeHabitacionActual == EstadoDeHabitacion.disponible){
+            habitacion.setEstadoHabitacion(EstadoDeHabitacion.en_mantenimiento);
+            System.out.println("La habitacion num " + num + " paso de disponible a en mantenimiento.");
+        }
+        else{
+            System.out.println("La habitacion num " + num + " esta reservada. No se puede cambiar el estado.");
+        }
+
+    }
+
+
+
 }
