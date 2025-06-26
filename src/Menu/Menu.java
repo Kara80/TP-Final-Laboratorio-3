@@ -323,6 +323,12 @@ public class Menu{
             System.out.print("Ingrese la contraseña: ");
             String contraseña = scanner.nextLine();
 
+            if (nombre.isBlank() || dni.isBlank() || nacionalidad.isBlank() ||
+                    domicilio.isBlank() || mail.isBlank() || contraseña.isBlank()) {
+                System.out.println("Error: Todos los campos deben estar completos.");
+                return;
+            }
+
             Cliente nuevoCliente = new Cliente(dni, nombre, nacionalidad, domicilio, contraseña, mail);
 
             hotel.agregarUsuario(nuevoCliente);
@@ -355,6 +361,12 @@ public class Menu{
             System.out.print("Ingrese la contraseña: ");
             String contraseña = scanner.nextLine();
 
+            if (nombre.isBlank() || dni.isBlank() || nacionalidad.isBlank() ||
+                    domicilio.isBlank() || mail.isBlank() || contraseña.isBlank()) {
+                System.out.println("Error: Todos los campos deben estar completos.");
+                return;
+            }
+
             Administrador nuevoAdmin = new Administrador(dni, nombre, nacionalidad, domicilio, contraseña, mail);
 
             hotel.agregarUsuario(nuevoAdmin);
@@ -386,6 +398,12 @@ public class Menu{
 
             System.out.print("Ingrese la contraseña: ");
             String contraseña = scanner.nextLine();
+
+            if (nombre.isBlank() || dni.isBlank() || nacionalidad.isBlank() ||
+                    domicilio.isBlank() || mail.isBlank() || contraseña.isBlank()) {
+                System.out.println("Error: Todos los campos deben estar completos.");
+                return;
+            }
 
             Recepcionista nuevoRecepcionista = new Recepcionista(dni, nombre, nacionalidad, domicilio, hotel, contraseña, mail);
 
