@@ -157,7 +157,12 @@ public class Menu{
                 case "1":
                     Cliente clienteIn = seleccionarCliente();
                     if (clienteIn != null) {
-                        recepcionista.hacerCheckIn(clienteIn);
+                        try{
+                            recepcionista.hacerCheckIn(clienteIn);
+                        }
+                        catch (HabitacionNoDisponibleException | ReservaNoEncontradaException e){
+                            System.out.println("error: " + e.getMessage());
+                        }
                     }
                     hotel.grabarReservas();
                     hotel.grabarHabitaciones();
@@ -166,7 +171,12 @@ public class Menu{
                 case "2":
                     Cliente clienteOut = seleccionarCliente();
                     if (clienteOut != null) {
-                        recepcionista.hacerCheckOut(clienteOut);
+                        try{
+                            recepcionista.hacerCheckOut(clienteOut);
+                        } catch (HabitacionNoDisponibleException | ReservaNoEncontradaException e) {
+                            System.out.println("error: " + e.getMessage());
+                        }
+
                     }
                     hotel.grabarReservas();
                     hotel.grabarHabitaciones();

@@ -78,5 +78,24 @@
         "dni": "123",
         "nacionalidad": "arg",
         "contraseña": "boca"
+    },
+    {
+        "tipo": "cliente",
+        "domicilio": "mdp",
+        "mail": "juanceto@gmail",
+        "reservas": [{
+            "fechaInicio": "2025-06-26",
+            "estadoReserva": "reservada",
+            "fechaFin": "2025-06-27",
+            "habitacion": {
+                "numero": 4,
+                "estadoHbitacion": "ocupada",
+                "capacidad": 4
+            }
+        }],
+        "nombre": "juancito",
+        "dni": "1234",
+        "nacionalidad": "argentina",
+        "contraseña": "juance"
     }
 ]
