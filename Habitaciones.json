@@ -42,20 +42,7 @@
     },
     {
         "numero": 3,
-        "reservas": [{
-            "cliente": {
-                "tipo": "cliente",
-                "domicilio": "arabia",
-                "mail": "elbicho@gmail",
-                "nombre": "Ronaldo",
-                "dni": "7777",
-                "nacionalidad": "Portugues",
-                "contraseña": "siu"
-            },
-            "fechaInicio": "2025-06-28",
-            "estadoReserva": "reservada",
-            "fechaFin": "2025-06-29"
-        }],
+        "reservas": [],
         "estadoHbitacion": "disponible",
         "capacidad": 4
     },

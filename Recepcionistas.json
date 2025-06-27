@@ -7,5 +7,14 @@
         "dni": "63424124",
         "nacionalidad": "Brazil",
         "contraseña": "contrasenia"
+    },
+    {
+        "tipo": "recepcionista",
+        "domicilio": "mdp",
+        "mail": "euge@gmail.com",
+        "nombre": "eugenia",
+        "dni": "20202020",
+        "nacionalidad": "argentina",
+        "contraseña": "eugeviti"
     }
 ]
