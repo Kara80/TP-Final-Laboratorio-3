@@ -58,7 +58,7 @@ public class Cliente extends Usuario{
             sb.append("Fecha de fin: ").append(reserva.getFechaFin()).append("\n");
 
             Habitacion h = reserva.getHabitacion();
-            sb.append("Numero de habitacion: ").append(h.getNumero());
+            sb.append("Numero de habitacion: ").append(h.getNumero()).append("\n");
             sb.append("Capacidad: ").append(h.getCapacidad()).append("\n");
             sb.append("Estado de habitación: ").append(h.getEstadoHabitacion()).append("\n");
             sb.append("---------------------------------------------").append("\n");

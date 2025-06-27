@@ -90,7 +90,8 @@ public class Menu{
             System.out.println("5. Agregar Recepcionistas");
             System.out.println("6. Eliminar recepcionista");
             System.out.println("7. Eliminar administrador");
-            System.out.println("8. Salir");
+            System.out.println("8. Eliminar administrador");
+            System.out.println("9. Salir");
             System.out.print("Opción: ");
 
             String opcion = scanner.nextLine();
@@ -125,6 +126,10 @@ public class Menu{
                     hotel.grabarReservas();
                     break;
                 case "8":
+
+
+                    break;
+                case "9":
                     salir = true;
                     break;
                 default:
@@ -276,6 +281,18 @@ public class Menu{
 
             System.out.print("Ingrese fecha de fin (YYYY-MM-DD): ");
             LocalDate fin = LocalDate.parse(scanner.nextLine());
+            //primero verifica que la fecha inicio sea anterior a la fecha final
+            //segundo verifica que sean iguales
+            //si algo de esto pasa se arroja una excepcion pidiendo fechas coherentes
+            if (inicio.isAfter(fin) || inicio.isEqual(fin)){
+                System.out.println("La fecha de inicio debe ir antes que la de final");
+                return;
+            }
+
+            if (inicio.isBefore(LocalDate.now())){
+                System.out.println("No se puede verificar una fecha del pasado");
+                return;
+            }
 
             var disponibles = hotel.obtenerHabitacionesDisponibles(inicio, fin);
 

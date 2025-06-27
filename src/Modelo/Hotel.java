@@ -262,6 +262,7 @@ public class Hotel {
 
     }
 
+
     /*
     Recorre la lista de reservas y verifica si existe una reserva cuyo cliente coincida
     con el pasado por parametro y que la fecha de inicio coincida tambien.
